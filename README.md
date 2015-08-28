@@ -1,2 +1,2 @@
-# thatsweet
+# Speck
 Making Unit Testing Sweeter
