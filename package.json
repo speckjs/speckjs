@@ -4,7 +4,7 @@
   "description": "Making Unit Testing Sweeter",
   "main": "speck.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/speckjs/speckjs/issues"
   },
-  "homepage": "https://github.com/speckjs/speckjs#readme"
+  "homepage": "https://github.com/speckjs/speckjs#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "gruntify-eslint": "^1.0.1"
+  }
 }
