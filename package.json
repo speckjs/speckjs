@@ -1,0 +1,19 @@
+{
+  "name": "speckjs",
+  "version": "0.0.1",
+  "description": "Making Unit Testing Sweeter",
+  "main": "speck.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/speckjs/speckjs.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/speckjs/speckjs/issues"
+  },
+  "homepage": "https://github.com/speckjs/speckjs#readme"
+}
