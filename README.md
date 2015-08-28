@@ -1,2 +1,2 @@
-# Speck
+# Speck.js
 Making Unit Testing Sweeter
