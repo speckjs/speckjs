@@ -9,6 +9,7 @@
 1. Discuss and review your code. - Once a Pull Request has been opened, the person or team reviewing your changes may have questions or comments. Perhaps the coding style doesn't match project guidelines, the change is missing unit tests, or maybe everything looks great and props are in order. Pull Requests are designed to encourage and capture this type of conversation.
 1. Development Merge - Once your pull request has been reviewed and the branch passes tests, the pull request can be merged into the development branch, to be tested into production.
 1. Master Merge - Now that your changes have been verified in production, it is time to merge your code into the master branch. Once merged, Pull Requests preserve a record of the historical changes to your code. Because they're searchable, they let anyone go back in time to understand why and how a decision was made.
+1. Remove the feature branch - Upon succesfully merge to master make sure to clean the relative branches from the published branches on origin.
 
 Details and pro-tips about the Github workflow and branching strategies in general:
 
