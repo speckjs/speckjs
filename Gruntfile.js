@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     eslint: {
-      src: ['speck.js', 'Gruntfile.js']
+      src: ['speck.js', 'Gruntfile.js', 'parsing/**/*.js’]
     },
     watch: {
       files: ['<%= eslint.src %>'],
