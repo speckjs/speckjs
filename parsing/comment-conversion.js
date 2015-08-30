@@ -10,26 +10,20 @@ var convertAssertionType = function(type) {
   return assertionTypeMap[type];
 };
 
-var extractTestDetails = function(parsedComment) {
-  var extractedDetails = {};
-
-  //Matches pattern of the test line to get just the title of the test
-  var testLineParts = extractValues(parsedComment.testLine, '{type} > {testTitle}');
-  extractedDetails.testTitle = testLineParts.testTitle;
-
-  extractedDetails.assertions = [];
+var extractTestDetails = function(parsedAssertions) {
+  var extractedAssertions = [];
   var assertionParts;
 
   //Loop over all assertions and use pattern matching to extract the atomic units
-  parsedComment.assertions.forEach(function(assertion) {
+  parsedAssertions.forEach(function(assertion) {
     assertionParts = extractValues(assertion, '{assertionInput} {assertionType} {assertionOutput} ({assertionMessage})');
 
     //Convert assertion type from symbol to usable syntax
     assertionParts.assertionType = convertAssertionType(assertionParts.assertionType);
-    extractedDetails.assertions.push(assertionParts);
+    extractedAssertions.push(assertionParts);
   });
 
-  return extractedDetails;
+  return extractedAssertions;
 };
 
 module.exports = {
