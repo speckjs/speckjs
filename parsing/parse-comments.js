@@ -23,7 +23,7 @@
   ```
 */
 var acorn = require('acorn');
-var extractValues = require("extract-values");
+var extractValues = require('extract-values');
 var tests = [];
 
 // Sanitizing iterator to run on each comment found during parsing
@@ -38,7 +38,7 @@ var onComment = function(block, text, start, end, startLoc, endLoc) {
     test.testLoc = endLoc.line;
     test.assertions = [];
     tests.push(test);
-  } else if (assertion !== null && startLoc.line === tests[tests.length - 1].testLoc +1 ) {
+  } else if (assertion !== null && startLoc.line === tests[tests.length - 1].testLoc +1) {
     tests[tests.length - 1].testLoc = endLoc.line;
     tests[tests.length - 1].assertions.push(assertion.body.trim());
   }
