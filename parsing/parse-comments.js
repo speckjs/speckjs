@@ -27,7 +27,7 @@
 */
 var R = require('ramda');
 var acorn = require('acorn');
-var acornOptions =  {locations: true, onComment: onComment};
+var acornOptions = {locations: true, onComment: onComment};
 var tests = [];
 
 
