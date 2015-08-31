@@ -19,6 +19,10 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "^0.6.1",
-    "gruntify-eslint": "^1.0.1"
+    "gruntify-eslint": "^1.0.1",
+    "tape": "^4.2.0"
+  },
+  "dependencies": {
+    "dot": "^1.0.3"
   }
 }
