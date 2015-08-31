@@ -22,6 +22,8 @@
     "gruntify-eslint": "^1.0.1"
   },
   "dependencies": {
-    "extract-values": "^0.1.2"
+    "extract-values": "^0.1.2",
+    "acorn": "^2.3.0",
+    "ramda": "^0.17.1"
   }
 }
