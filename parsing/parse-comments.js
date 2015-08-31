@@ -43,8 +43,10 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
   var lastTestFound = R.last(tests);
   var newTest;
 
-  function belongToTest(test) {
-    return (test === undefined) ? false : sLoc.line - 1 === test.loc.endLine;
+  // Functional helpers
+  // =================================
+  function belongToTest(locLine, test) {
+    return (test === undefined) ? false : locLine - 1 === test.loc.endLine;
   }
 
   function createTest(title) {
@@ -55,36 +57,41 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
     };
   }
 
-  function appendAssertionToTest(test, string) {
-    test.assertions.push(string);
+  function appendAssertionToTest(assertion, test) {
+    test.assertions.push(assertion);
     test.loc.endLine = eLoc.line;
     return test;
   }
 
+  function addTitleToTest(title, test) {
+    test.title = title;
+    return test;
+  }
+
+  function enrichTest(test, string) {
+    if (isTest(string)) {
+      addTitleToTest(extractTest(string), test);
+    } else if (isAssertion(string)) {
+      appendAssertionToTest(extractAssertion(string), test);
+    }
+    return test;
+  }
+
   // Process Single Line Comment
+  // =================================
   if (!isBlock) {
     if (isTest(text)) {
       newTest = R.pipe(extractTest, createTest)(text);
       tests.push(newTest);
-    } else if (isAssertion(text) && belongToTest(lastTestFound)) {
-      appendAssertionToTest(lastTestFound, extractAssertion(text));
+    } else if (isAssertion(text) && belongToTest(sLoc.line, lastTestFound)) {
+      appendAssertionToTest(extractAssertion(text), lastTestFound);
     }
   }
 
   // Process Block-Multi line Comment
+  // =================================
   if (isBlock && isTest(text)) {
-
-    newTest = R.reduce(function(test, line) {
-      if (isTest(line)) {
-        test.title = extractTest(line);
-        return test;
-      } else if (isAssertion(line)) {
-        test.assertions.push(extractAssertion(line));
-        return test;
-      }
-      return test;
-    }, createTest(), R.split('\n', text));
-
+    newTest = R.reduce(enrichTest, createTest(), R.split('\n', text));
     tests.push(newTest);
   }
 }
