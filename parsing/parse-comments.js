@@ -22,33 +22,70 @@
   ]
   ```
 */
+var R = require('ramda');
 var acorn = require('acorn');
-var extractValues = require('extract-values');
+var acornOptions =  {locations: true, onComment: onComment};
 var tests = [];
 
+
 // Sanitizing iterator to run on each comment found during parsing
-var onComment = function(block, text, start, end, startLoc, endLoc) {
-  // Check if a block is a test pattern: {start > ...}
-  var spec = extractValues(text, '{flag} > {title}');
-  var assertion = extractValues(text, '#{body}');
-  var test = {};
+function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
 
-  if (spec !== null && spec.flag.trim() === 'test') {
-    test.testTitle = spec.title.trim();
-    test.testLoc = endLoc.line;
-    test.assertions = [];
-    tests.push(test);
-  } else if (assertion !== null && startLoc.line === tests[tests.length - 1].testLoc +1) {
-    tests[tests.length - 1].testLoc = endLoc.line;
-    tests[tests.length - 1].assertions.push(assertion.body.trim());
+  var tRegex = /test\s*>\s*(.*)/i;
+  var aRegex = /#\s*(.*)/i;
+  var isTest = R.test(tRegex);
+  var extractTest = R.pipe(R.match(tRegex), R.last(), R.trim());
+  var isAssertion = R.test(aRegex);
+  var extractAssertion = R.pipe(R.match(aRegex), R.last(), R.trim());
+  var lastTestFound = R.last(tests);
+  var newTest;
+
+  function belongToTest(test) {
+    return (test === undefined) ? false : sLoc.line - 1 === test.loc.endLine;
   }
-};
 
-// Setting acorn for our parsing needs
-var acornOptions =  {
-  locations: true,
-  onComment: onComment
-};
+  function createTest(title) {
+    return {
+      title: title || null,
+      loc: { startLine: sLoc.line, endLine: eLoc.line },
+      assertions: []
+    };
+  }
+
+  function appendAssertionToTest(test, string) {
+    test.assertions.push(string);
+    test.loc.endLine = eLoc.line;
+    return test;
+  }
+
+  // Process Single Line Comment
+  if (!isBlock) {
+    if (isTest(text)) {
+      newTest = R.pipe(extractTest, createTest)(text);
+      tests.push(newTest);
+    } else if (isAssertion(text) && belongToTest(lastTestFound)) {
+      appendAssertionToTest(lastTestFound, extractAssertion(text));
+    }
+  }
+
+  // Process Block-Multi line Comment
+  if (isBlock && isTest(text)) {
+
+    newTest = R.reduce(function(test, line) {
+      if (isTest(line)) {
+        test.title = extractTest(line);
+        return test;
+      } else if (isAssertion(line)) {
+        test.assertions.push(extractAssertion(line));
+        return test;
+      }
+      return test;
+    }, createTest(), R.split('\n', text));
+
+    tests.push(newTest);
+  }
+}
+
 
 // Parsing via acorn and returning an enriched object
 // containing the whole ast and tests array as properties.
@@ -57,7 +94,6 @@ var parse = function(string, options) {
   var output = {};
   output.ast = acorn.parse(string, options);
   output.tests = tests;
-
   return output;
 };
 
@@ -65,5 +101,4 @@ var parse = function(string, options) {
 // Public parsing API
 module.exports = {
   parse: parse
-  // getters for ast, filename, whataver
 };

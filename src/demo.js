@@ -14,11 +14,29 @@ module.exports = {
   product: function(a, b) {
     return a * b;
   }
-  // test foo function
-  // test foo > function
+  // test aaa function
+  // test bbb > function
 
-  // # sum(1,3) == 4 (returnt the sum of both params)
+  // # ccc(1,3) == 4 (returnt the sum of both params)
 
-  // test > foo function
-  // test > bar function
+  // test > ddd function
+  // test > eee function
+  /*
+   test > fff function
+   # fff(200,3) == 6 (returnt the product of both params)
+   # fff(1000,10) == 100 (return the product of both params)
+  */
+
+ /*
+  * test > ggg function
+  * # ggg(0,0) == 0 (returnt the product of both params)
+  * # ggg(0,0) == 0 (return the product of both params)
+ */
+
+ /*
+  * test - hhh function
+  * # hhh(0,0) == 0 (returnt the product of both params)
+  * # hhh(0,0) == 0 (return the product of both params)
+ */
+
 };
