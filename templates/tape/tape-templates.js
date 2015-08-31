@@ -1,17 +1,15 @@
 // UTILITY TEMPLATES
-var tempRequire = "var {{=it.varName}} = require('{{=it.module}}');";
+var tempRequire = 'var {{=it.varName}} = require(\'{{=it.module}}\');';
 
 // BASE TEMPLATE FOR TESTS (deliberately missing ending syntax - closed in util fx)
 var baseTemplate =
-"test('{{=it.testTitle}}', function(t) { \
-t.plan({{=it.assertions}}); \ ";
+'test(\'{{=it.testTitle}}\', function(t) { \
+t.plan({{=it.assertions}}); \ ';
 
 // INDIVIDUAL ASSERTION TEMPLATES
-var equalsTemplate = "t.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, '{{=it.assertionMessage}}'); \n";
 
 // EXPORT TEMPLATES
 module.exports = {
   require: tempRequire,
-  base: baseTemplate,
-  equals: equalsTemplate
+  base: baseTemplate
 };
