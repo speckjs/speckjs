@@ -49,7 +49,7 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
     return (test === undefined) ? false : locLine - 1 === test.loc.endLine;
   }
 
-  function createTest(title) {
+  function createEmptyTest(title) {
     return {
       title: title || null,
       loc: { startLine: sLoc.line, endLine: eLoc.line },
@@ -57,22 +57,22 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
     };
   }
 
-  function appendAssertionToTest(assertion, test) {
+  function addAssertionToTest(assertion, test) {
     test.assertions.push(assertion);
     test.loc.endLine = eLoc.line;
     return test;
   }
 
-  function addTitleToTest(title, test) {
+  function setTestTitle(title, test) {
     test.title = title;
     return test;
   }
 
-  function enrichTest(test, string) {
+  function buildTest(test, string) {
     if (isTest(string)) {
-      addTitleToTest(extractTest(string), test);
+      setTestTitle(extractTest(string), test);
     } else if (isAssertion(string)) {
-      appendAssertionToTest(extractAssertion(string), test);
+      addAssertionToTest(extractAssertion(string), test);
     }
     return test;
   }
@@ -81,17 +81,17 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
   // =================================
   if (!isBlock) {
     if (isTest(text)) {
-      newTest = R.pipe(extractTest, createTest)(text);
+      newTest = R.pipe(extractTest, createEmptyTest)(text);
       tests.push(newTest);
     } else if (isAssertion(text) && belongToTest(sLoc.line, lastTestFound)) {
-      appendAssertionToTest(extractAssertion(text), lastTestFound);
+      addAssertionToTest(extractAssertion(text), lastTestFound);
     }
   }
 
   // Process Block-Multi line Comment
   // =================================
   if (isBlock && isTest(text)) {
-    newTest = R.reduce(enrichTest, createTest(), R.split('\n', text));
+    newTest = R.reduce(buildTest, createEmptyTest(), R.split('\n', text));
     tests.push(newTest);
   }
 }
