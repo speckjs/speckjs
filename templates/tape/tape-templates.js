@@ -7,15 +7,11 @@ var baseTemplate =
 t.plan({{=it.assertions}}); \ ";
 
 // INDIVIDUAL ASSERTION TEMPLATES
-var passTemplate = "t.{{=it.assertionType}}('{{=it.assertionMessage}}'); \n";
-var failTemplate = "t.{{=it.assertionType}}('{{=it.assertionMessage}}'); \n";
 var equalsTemplate = "t.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, '{{=it.assertionMessage}}'); \n";
 
 // EXPORT TEMPLATES
 module.exports = {
   require: tempRequire,
   base: baseTemplate,
-  pass: passTemplate,
-  fail: failTemplate,
   equals: equalsTemplate
 };
