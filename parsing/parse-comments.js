@@ -15,8 +15,8 @@
   ```
   [
     {
-      title: 'test > sum function',
-      loc: { startLine: 0, endLine: 10},
+      title: 'sum function',
+      loc: { startLine: 0, endLine: 10},`
       assertions: [
         'sum(1,3) == 4 (return the sum of both params)',
         'sum(10,10) == 20 (return the sum of both params)'
