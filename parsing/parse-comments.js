@@ -2,18 +2,21 @@
   ============================================================
   parse-comments.js
   ============================================================
-  Receive a string/file/blog as input:
-  check for speckjs formatted comments:
+  Receive a string/file/blog as input
+  -work with both single line and block comments
+  -test without assertion will still parse, not viceversa ofc.
+  Speckjs formatted comment example:
   ```
   // test > sum function
   // # sum(1,3) == 4 (returnt.equal(4, file.sum(13) the sum of both params)
   // # sum(10,10) == 20 (return the sum of both params)
   ```
-  and return an array of raw test objects in the form of:
+  Return an array of raw test objects in the form of:
   ```
   [
     {
-      testLine: 'test > sum function'
+      title: 'test > sum function',
+      loc: { startLine: 0, endLine: 10},
       assertions: [
         'sum(1,3) == 4 (return the sum of both params)',
         'sum(10,10) == 20 (return the sum of both params)'
