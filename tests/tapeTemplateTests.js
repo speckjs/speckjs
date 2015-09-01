@@ -67,6 +67,27 @@ test('tape template function', function (t) {
       }
       ]
     };
+
+    var errorObj = {
+      specType : 'tape',
+      specFileSrc : 'app.js',
+      tests : [
+        { testTitle: 'sum function',
+          assertions: [
+          { assertionMessage: 'return the sum of both params',
+            assertionInput: 'sum(6, 7)',
+            assertionOutput: '13'
+          },
+          { assertionMessage: 'return the sum of both params',
+            assertionType: 'equals',
+            assertionInput: 'sum(8, 9)',
+            assertionOutput: '17'
+          }
+          ]
+      }
+      ]
+    };
+
     var normalTestBlock = 'test(\'sum function\', function (t) {' +
                             't.equal(sum(6, 7), 13, \'return the sum of both params\')' +
                             't.equal(sum(8, 9), 17, \'return the sum of both params\')' +
@@ -87,4 +108,5 @@ test('tape template function', function (t) {
     //It takes multiple test blocks and produces a properly formatted tape test
     t.equal(template.addTestDataToBaseTemplate(tapeTemplates.baseTemplate, dataObj), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
     //If a field is missing, return error, missing field
+    t.equal(template.addTestDataToBaseTemplate(tapeTemplates.baseTemplate, errorObj), 'Please provide properly formatted comment', 'Takes an incorrectly formatted object and returns an error message');
   });
