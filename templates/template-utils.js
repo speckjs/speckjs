@@ -1,10 +1,13 @@
+var dot = require('dot');
+var tapeTemps = require('./tape-templates.js');
+
 /*
   Function that transforms an object into JavaScript test code.
   input:  (String) base-template to build upon with each test and its respective assertions.
   input:  (Object) test data from parsed comments.
   output: (String) interpolated test block.
 */
-var addTestDataToBaseTemplate = function(baseTemp, data) {
+exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   var tests = data.tests;
   var result = '';
 
@@ -24,7 +27,7 @@ var addTestDataToBaseTemplate = function(baseTemp, data) {
     }
 
     // Close currentTest block and add to result
-    result += currentTest + "}); \n";
+    result += currentTest + '}); \n';
   }
 
   // Return string representing interpolated test block
