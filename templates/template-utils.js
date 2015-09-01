@@ -1,5 +1,5 @@
 var dot = require('dot');
-var tapeTemps = require('./tape-templates.js');
+var tapeTemps = require('./tape/tape-templates.js');
 
 /*
   Function that transforms an object into JavaScript test code.
