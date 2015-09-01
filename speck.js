@@ -5,37 +5,85 @@
   Thatsweet produce sjs syntax file, that can be compiled into
   testSpec.js files via sweet.js ans a set of ad-hoc macros.
 */
+
 var fs = require('fs');
 var path = require('path');
-// var acorn = require('acorn');
 var comments = require('./parsing/parse-comments.js');
+var extract = require('./parsing/comment-conversion.js');
+var tapeTemps = require('./templates/tape/tape-templates.js');
+var tempUtils = require('./templates/template-utils.js');
 
-// Get the list of the files to be parsed
+// Get the list of the files to be parsed from command line
 var files = process.argv.slice(2);
-
+// OR
+// Get the list of files to be parsed from src/
+// var files = fs.readdirSync(__dirname + "/src");
+console.log('files:', files);
 
 // Create i/o streams for each file
 files.forEach(function(fileName) {
 
+  // Look in /src for files to parse (may want to refactor later for more flexibility)
   var rStream = fs.createReadStream(path.join(__dirname, fileName));
-  // TODO: Writing output path need to be fixed
-  // var writeStream = fs.createWriteStream('./srcSpecs/testSpec-' + fileName);
-  var data = '';
 
+  // Gather data from file being read in
+  var data = '';
   rStream.on('data', function(chunk) {
     data += chunk;
   });
 
-  // Once each readable stream buffer is complete,
-  // parse it and write the result in the writable stream
+  // Readable stream buffer is complete- data now ready for use
   rStream.on('end', function() {
-    var parsedBuffer = comments.parse(data);
-    console.log(parsedBuffer.tests);
+
+    // Get SpeckJS comments from file data (Nick)
+    var tests = comments.parse(data).tests;
+    var testDetails;
+
+    // Get test details
+    for (var i = 0; i < tests.length; i++) {
+      // If assertions to be written
+      if (tests[i].assertions.length) {
+        // Extract test details from parsed comments (Luke)
+        testDetails = extract.extractTestDetails(tests[i].assertions);
+
+        // Use testDetails to construct object to send into util function
+        var utilData = {
+          specType : 'tape',
+          specFileSrc : fileName,
+          tests : [
+            { testTitle: tests[i].title,
+              assertions: testDetails
+            }
+          ]
+        }
+
+        // Convert utilData into usable JavaScript test code (Greg)
+        var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
+        console.log(jsTestString);
+
+        // PREPARE TO WRITE jsTestString TO SPEC FILE!
+      }
+    }
+
+    // Create writeStream to write test code to a spec file
+    // var writeStream = fs.createWriteStream('./srcSpecs/testSpec-' + fileName);
+    // // Write require tape
+    // writeStream.write(tapeTemps.require({varName: 'test', module: 'tape'}) + endOfLine);
+    // // Write require file
+    // writeStream.write(tapeTemps.require({varName: 'file', module: './' + fileName}) + endOfLine);
+    // writeStream.write(jsTestString);
+  });
+
+
+
+
+
+  // NICK'S OLD CODE (FOR REFERENCE)
+
+  // TODO: Writing output path need to be fixed
+  // var writeStream = fs.createWriteStream('./srcSpecs/testSpec-' + fileName);
 
     // console.dir(parsedStream.comments[1].range);
-
-
-
 
     // writeStream.write(parsedStream.comments[0].value);
 
@@ -75,5 +123,5 @@ files.forEach(function(fileName) {
     // testSpec.forEach(function(partial) {
     //   writeStream.write(partial + endOfLine);
     // });
-  });
+  // });
 });
