@@ -33,4 +33,9 @@ var dataObj = {
 
 test('tape template function', function (t) {
     t.plan(2); // How many tests?
+        //It takes an empty object and outputs an empty test block
+        //It takes a properly formatted object and outputs a formatted test block
+        //It takes one test
+        //It takes multiple tests
+        //If a field is missing, return error, missing field
 });
