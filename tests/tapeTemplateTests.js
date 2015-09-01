@@ -5,7 +5,7 @@ var tapeTemplates = require('tape-templates.js');
 // TEST FIXTURE
 
 test('tape template function', function (t) {
-    t.plan(3); // How many tests
+    t.plan(2); // How many tests?
     //Dummy data for parsed comment
     var emptyTestObj = {
       specType : 'tape',
@@ -17,11 +17,36 @@ test('tape template function', function (t) {
        ]
     };
 
+    var singleTestObj = {
+      specType : 'tape',
+      specFileSrc : 'app.js',
+      tests : [
+      { testTitle: 'sum function',
+        assertions: [
+          { assertionMessage: 'return the sum of both params',
+            assertionType: 'equals',
+            assertionInput: 'sum(6, 7)',
+            assertionOutput: '13'
+          },
+          { assertionMessage: 'return the sum of both params',
+            assertionType: 'equals',
+            assertionInput: 'sum(8, 9)',
+            assertionOutput: '17'
+          }
+        ]
+      }
+     ]
+    };
+    var singleTestBlock = "test('sum function', function (t) {" +
+                            "t.equal(sum(6, 7), 13, 'return the sum of both params')" +
+                            "t.equal(sum(8, 9), 17, 'return the sum of both params')"+
+                          ")}";
     var emptyTestBlock = "test('sum function', function (t) {" +
                           "})";
     //It takes an empty object and outputs an empty test block
     t.equal(template.addTestDataToBaseTemplate(tapeTemplates.baseTemplate, emptyTestObj), emptyTestBlock, 'Takes an test with 0 assertion and outputs a base template');
     //It takes one test block and produces a properly formatted tape test
+    t.equal(template.addTestDataToBaseTemplate(tapeTemplates.baseTemplate, singleTestObj), emptyTestBlock, 'Takes an test with 0 assertion and outputs a base template');
     //It takes multiple test blocks and produces a properly formatted tape test
     //If a field is missing, return error, missing field
 });
