@@ -19,11 +19,11 @@ var testFW = args[0];
 var testPath = args[1];
 var files = args.slice(2);
 
-console.log('args:', args);
-console.log('testFW:', testFW);
-console.log('testPath:', testPath);
-console.log('files:', files);
-console.log('---');
+// console.log('args:', args);
+// console.log('testFW:', testFW);
+// console.log('testPath:', testPath);
+// console.log('files:', files);
+// console.log('---');
 
 // Create i/o streams for each file
 files.forEach(function(fileName) {
@@ -42,25 +42,27 @@ files.forEach(function(fileName) {
 
     // Get SpeckJS comments from file data (Nick)
     var tests = comments.parse(data).tests;
-    var testDetails;
+    var readyTestsToWrite = [];
 
     // Get test details
     tests.forEach(function(test) {
       // If assertions to be written
       if (test.assertions.length) {
         // Extract test details from parsed comments (Luke)
-        testDetails = extract.extractTestDetails(test.assertions);
+        var testDetails = extract.extractTestDetails(test.assertions);
 
         // Use testDetails to construct object to send into util function
         var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
 
         // Convert utilData into usable JavaScript test code (Greg)
         var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
-        console.log(jsTestString);
 
-        // Create writestream to add new test code to spec file
-        tempUtils.writeToTestFile(testPath, fileName, jsTestString);
+        // Add prepared test string to array for later writing
+        readyTestsToWrite.push(jsTestString);
       }
     });
+
+    // Write prepared tests to file
+    tempUtils.writeToTestFile(testPath, fileName, readyTestsToWrite);
   });
 });

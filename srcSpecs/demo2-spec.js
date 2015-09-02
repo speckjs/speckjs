@@ -1,4 +1,4 @@
-var test = require('tape');var file = require('../src/demo.js');test('sum function', function(t) { t.plan(2); 
+var test = require('tape');var file = require('../src/demo2.js');test('sum function', function(t) { t.plan(2); 
 t.equal(4, file.sum(1,3), 'returnt the sum of both params') 
 t.equal(20, file.sum(10,10), 'return the sum of both params') 
 }); 

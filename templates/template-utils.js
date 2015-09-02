@@ -3,6 +3,7 @@ var path = require('path');
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
 
+
 /*
   Create require statement from given args.
   input:  (String) variable name assigned with required module.
@@ -50,6 +51,7 @@ exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   return result;
 };
 
+
 /*
   Creates an object in the format that the templating helper function expects.
   input:  (String) path to where you want new test file saved.
@@ -74,20 +76,21 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   Writes String to new test file.
   input:  (String) path to where you want new test file saved.
   input:  (String) name used to create test file.
-  input:  (String) String ready to be written to file.
+  input:  (Array) strings ready to be written to file.
   output: null.
 */
-exports.writeToTestFile = function(testPath, fileName, jsTestString) {
-  // Create writestream to add new test code to spec file
+exports.writeToTestFile = function(testPath, fileName, tests) {
   // Logic for creating filename assumes it needs the following done: slice removes '/src', split removes '.js'
   var specFilePath = testPath + fileName.slice(4).split('.')[0] + '-spec.js';
   var writeStream = fs.createWriteStream(specFilePath);
 
   // Write require statements for testing library and parsed file
   writeStream.write(exports.addRequire('test', 'tape'));
-  writeStream.write(exports.addRequire('file', './' + fileName));
+  writeStream.write(exports.addRequire('file', '../' + fileName));
 
   // Write tests to file
-  writeStream.write(jsTestString);
+  tests.forEach(function(test){
+    writeStream.write(test);
+  });
   writeStream.end();
 };
