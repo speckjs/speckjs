@@ -12,6 +12,7 @@ var notEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{
 var notDeepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
 var deepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
 var okTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
+var notOkTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
 // Export templates
 module.exports = {
   require: tempRequire,
@@ -20,5 +21,6 @@ module.exports = {
   notEqual: notEqualTemplate,
   deepEqual: deepEqualTemplate,
   notDeepEqual: notDeepEqualTemplate,
-  ok: okTemplate
+  ok: okTemplate,
+  notOk: notOkTemplate
 };
