@@ -13,12 +13,17 @@ var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
-// Get the list of the files to be parsed from command line
-var files = process.argv.slice(2);
-// OR
-// Get the list of files to be parsed from src/
-// var files = fs.readdirSync(__dirname + "/src");
+// Parse command-line arguments
+var args = process.argv.slice(2);
+var testFW = args[0];
+var testPath = args[1];
+var files = args.slice(2);
+
+console.log('args:', args);
+console.log('testFW:', testFW);
+console.log('testPath:', testPath);
 console.log('files:', files);
+console.log('---');
 
 // Create i/o streams for each file
 files.forEach(function(fileName) {
@@ -40,88 +45,22 @@ files.forEach(function(fileName) {
     var testDetails;
 
     // Get test details
-    for (var i = 0; i < tests.length; i++) {
+    tests.forEach(function(test) {
       // If assertions to be written
-      if (tests[i].assertions.length) {
+      if (test.assertions.length) {
         // Extract test details from parsed comments (Luke)
-        testDetails = extract.extractTestDetails(tests[i].assertions);
+        testDetails = extract.extractTestDetails(test.assertions);
 
         // Use testDetails to construct object to send into util function
-        var utilData = {
-          specType : 'tape',
-          specFileSrc : fileName,
-          tests : [
-            { testTitle: tests[i].title,
-              assertions: testDetails
-            }
-          ]
-        }
+        var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
 
         // Convert utilData into usable JavaScript test code (Greg)
         var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
         console.log(jsTestString);
 
-        // PREPARE TO WRITE jsTestString TO SPEC FILE!
+        // Create writestream to add new test code to spec file
+        tempUtils.writeToTestFile(testPath, fileName, jsTestString);
       }
-    }
-
-    // Create writeStream to write test code to a spec file
-    // var writeStream = fs.createWriteStream('./srcSpecs/testSpec-' + fileName);
-    // // Write require tape
-    // writeStream.write(tapeTemps.require({varName: 'test', module: 'tape'}) + endOfLine);
-    // // Write require file
-    // writeStream.write(tapeTemps.require({varName: 'file', module: './' + fileName}) + endOfLine);
-    // writeStream.write(jsTestString);
+    });
   });
-
-
-
-
-
-  // NICK'S OLD CODE (FOR REFERENCE)
-
-  // TODO: Writing output path need to be fixed
-  // var writeStream = fs.createWriteStream('./srcSpecs/testSpec-' + fileName);
-
-    // console.dir(parsedStream.comments[1].range);
-
-    // writeStream.write(parsedStream.comments[0].value);
-
-    // var cmds = parsedStream.comments[0].value
-    //   .substring(6)
-    //   .split('\'').join('').split(',')
-    //   .map(function(str) {
-    //     return str.trim();
-    //   });
-
-    // // String sanitization [COWBOY STYLE]
-    // // spec, assertions, assertionType, assertionTitle, test, expected
-    // var spec = cmds[0];
-    // var assertions = cmds[1];
-    // var assertionType = cmds[2];
-    // var assertionTitle = cmds[3];
-    // var test = cmds[4] + cmds[5];
-    // var expected = cmds[6];
-
-    // // templates
-    // var tempRequire = dot.template('var {{=it.varName}} = require(\'{{=it.module}}\');');
-
-
-    // var tempTest = dot.template('test(\'{{=it.spec}}\', function(t) {--\
-    //     t.plan({{=it.assertions}});--\
-    //     t.{{=it.assertionType}}({{=it.expected}}, file.{{=it.test}}, \'{{=it.assertionTitle}}\');--\
-    //   });');
-
-    // // Write require tape
-    // writeStream.write(tempRequire({varName: 'test', module: 'tape'}) + endOfLine);
-    // // Write require file
-    // writeStream.write(tempRequire({varName: 'file', module: './' + fileName}) + endOfLine);
-
-    // // Write test
-    // var testSpec = tempTest({spec: spec, assertions: assertions, assertionType: assertionType, assertionTitle: assertionTitle, test: test, expected: expected})
-    //   .split('--');
-    // testSpec.forEach(function(partial) {
-    //   writeStream.write(partial + endOfLine);
-    // });
-  // });
 });
