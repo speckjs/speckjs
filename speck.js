@@ -36,7 +36,7 @@ files.forEach(function(fileName) {
 
     // Get SpeckJS comments from file data (Nick)
     var tests = comments.parse(data).tests;
-    var readyTestsToWrite = [];
+    var testsReadyToWrite = [];
 
     // Get test details
     tests.forEach(function(test) {
@@ -52,11 +52,11 @@ files.forEach(function(fileName) {
         var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
 
         // Add prepared test string to array for later writing
-        readyTestsToWrite.push(jsTestString);
+        testsReadyToWrite.push(jsTestString);
       }
     });
 
     // Write prepared tests to file
-    tempUtils.writeToTestFile(testPath, fileName, readyTestsToWrite);
+    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite);
   });
 });
