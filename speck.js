@@ -19,12 +19,6 @@ var testFW = args[0];
 var testPath = args[1];
 var files = args.slice(2);
 
-// console.log('args:', args);
-// console.log('testFW:', testFW);
-// console.log('testPath:', testPath);
-// console.log('files:', files);
-// console.log('---');
-
 // Create i/o streams for each file
 files.forEach(function(fileName) {
 

@@ -1,8 +1,6 @@
 var fs = require('fs');
-var path = require('path');
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
-
 
 /*
   Create require statement from given args.
@@ -89,7 +87,7 @@ exports.writeToTestFile = function(testPath, fileName, tests) {
   writeStream.write(exports.addRequire('file', '../' + fileName));
 
   // Write tests to file
-  tests.forEach(function(test){
+  tests.forEach(function(test) {
     writeStream.write(test);
   });
   writeStream.end();
