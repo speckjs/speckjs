@@ -5,7 +5,7 @@ var tapeTemps = require('../templates/tape/tape-templates.js');
 // TEST FIXTURE
 
 test('tape template function', function (t) {
-    t.plan(1); // How many tests?
+    t.plan(3); // How many tests?
     //Dummy data for parsed comment
     var dataObj = {
       specType : 'tape',
@@ -14,12 +14,12 @@ test('tape template function', function (t) {
         { testTitle: 'sum function',
           assertions: [
             { assertionMessage: 'return the sum of both params',
-              assertionType: 'equals',
+              assertionType: 'equal',
               assertionInput: 'sum(6, 7)',
               assertionOutput: '13'
             },
             { assertionMessage: 'return the sum of both params',
-              assertionType: 'equals',
+              assertionType: 'equal',
               assertionInput: 'sum(8, 9)',
               assertionOutput: '17'
             }
@@ -28,7 +28,7 @@ test('tape template function', function (t) {
         { testTitle: 'multiply function',
           assertions: [
             { assertionMessage: 'return the product of both params',
-              assertionType: 'equals',
+              assertionType: 'equal',
               assertionInput: 'mult(4, 5)',
               assertionOutput: '20'
             }
@@ -54,12 +54,12 @@ test('tape template function', function (t) {
         { testTitle: 'sum function',
           assertions: [
           { assertionMessage: 'return the sum of both params',
-            assertionType: 'equals',
+            assertionType: 'equal',
             assertionInput: 'sum(6, 7)',
             assertionOutput: '13'
           },
           { assertionMessage: 'return the sum of both params',
-            assertionType: 'equals',
+            assertionType: 'equal',
             assertionInput: 'sum(8, 9)',
             assertionOutput: '17'
           }
@@ -79,7 +79,7 @@ test('tape template function', function (t) {
             assertionOutput: '13'
           },
           { assertionMessage: 'return the sum of both params',
-            assertionType: 'equals',
+            assertionType: 'equal',
             assertionInput: 'sum(8, 9)',
             assertionOutput: '17'
           }
@@ -102,11 +102,11 @@ test('tape template function', function (t) {
     var emptyTestBlock = 'test(\'sum function\', function (t) {' +
                           '})';
     // //It takes an empty object and outputs an empty test block
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.baseTemplate, emptyTestObj), emptyTestBlock, 'Takes an test with 0 assertion and outputs a base template');
+    t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, emptyTestObj), emptyTestBlock, 'Takes an test with 0 assertion and outputs a base template');
     // //It takes one test block and produces a properly formatted tape test
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.baseTemplate, singleTestObj), singleTestBlock, 'Takes an test with 0 assertion and outputs a base template');
+    t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, singleTestObj), singleTestBlock, 'Takes an test with 0 assertion and outputs a base template');
     //It takes multiple test blocks and produces a properly formatted tape test
-    t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.baseTemplate, dataObj), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, dataObj), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
     //If a field is missing, return error, missing field
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.baseTemplate, errorObj), 'Please provide properly formatted comment', 'Takes an incorrectly formatted object and returns an error message');
+    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, errorObj), 'Please provide properly formatted comment', 'Takes an incorrectly formatted object and returns an error message');
   });
