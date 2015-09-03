@@ -1,6 +1,6 @@
 var test = require('tape');
-var template = require('template-utils.js');
-var tapeTemplates = require('tape-templates.js');
+var template = require('../templates/template-utils.js');
+var tapeTemplates = require('../templates/tape/tape-templates.js');
 
 // TEST FIXTURE
 
