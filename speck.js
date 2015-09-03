@@ -49,9 +49,11 @@ files.forEach(function(fileName) {
         var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
 
         // Convert utilData into usable JavaScript test code (Greg)
+        //Need conditional testing here to figure out whether Jasmine or Tape Test
         var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
 
         // Add prepared test string to array for later writing
+        //Add result of condtional into this
         testsReadyToWrite.push(jsTestString);
       }
     });
