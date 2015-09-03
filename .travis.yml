@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- stable
+before_install:
+- npm install -g grunt-cli
+install:
+- npm install
+notifications:
+  email: false
