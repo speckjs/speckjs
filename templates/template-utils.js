@@ -49,6 +49,15 @@ exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   return result;
 };
 
+/*
+  Function that transforms an object into JavaScript test code.
+  input:  (String) base-template to build upon with each test and its respective assertions.
+  input:  (Object) test data from parsed comments.
+  output: (String) interpolated test block.
+*/
+exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data){
+};
+
 
 /*
   Creates an object in the format that the templating helper function expects.

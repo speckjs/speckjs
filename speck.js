@@ -50,11 +50,16 @@ files.forEach(function(fileName) {
 
         // Convert utilData into usable JavaScript test code (Greg)
         //Need conditional testing here to figure out whether Jasmine or Tape Test
-        var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
-
-        // Add prepared test string to array for later writing
-        //Add result of condtional into this
-        testsReadyToWrite.push(jsTestString);
+        if (utilData.specType === 'tape') {
+          var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
+          // Add prepared test string to array for later writing
+          //Add result of condtional into this
+          testsReadyToWrite.push(jsTestString);
+        }
+        if (utilData.specType === 'jasmine') {
+          var jasmineTestString = tempUtils.addTestDataToBaseTemplateJasmine();
+          testsReadyToWrite.push(jasmineTestString);
+        }
       }
     });
 
@@ -62,3 +67,38 @@ files.forEach(function(fileName) {
     tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite);
   });
 });
+
+
+// var dataObj = {
+//       specType : 'tape',
+//       specFileSrc : 'app.js',
+//       tests : [
+//         { testTitle: 'sum function',
+//           assertions: [
+//             { assertionMessage: 'return the sum of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'sum(6, 7)',
+//               assertionOutput: '13'
+//             },
+//             { assertionMessage: 'return the sum of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'sum(8, 9)',
+//               assertionOutput: '17'
+//             }
+//           ]
+//         },
+//         { testTitle: 'multiply function',
+//           assertions: [
+//             { assertionMessage: 'return the product of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'mult(4, 5)',
+//               assertionOutput: '20'
+//             }
+//           ]
+//         }
+//       ]
+//     };
+// if(dataObj.specType === 'tapes'){
+// console.log(dataObj.specType);
+// console.log(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, dataObj));
+// }
