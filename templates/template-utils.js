@@ -1,6 +1,7 @@
 var fs = require('fs');
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
+var jasmineTemps = require('./jasmine/jasmine-templates.js');
 
 /*
   Create require statement from given args.
@@ -56,6 +57,30 @@ exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   output: (String) interpolated test block.
 */
 exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data){
+  var tests = data.tests;
+  var result = '';
+
+  // For each test
+  for (var i=0; i < tests.length; i++) {
+    // Add title and assertion count to baseTemp
+    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
+                                              assertions: tests[i].assertions.length}) + '\n';
+
+    // For each assertion in test
+    for (var j=0; j < tests[i].assertions.length; j++) {
+      var tempToAdd = jasmineTemps[tests[i].assertions[j].assertionType];
+      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
+
+      // Add filled-in template to currentTest
+      currentTest += compiledAssertToAdd + '\n';
+    }
+
+    // Close currentTest block and add to result
+    result += currentTest + '}); \n';
+  }
+
+  // Return string representing interpolated test block
+  return result;
 };
 
 

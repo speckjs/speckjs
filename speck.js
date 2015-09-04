@@ -11,6 +11,7 @@ var path = require('path');
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
+var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
 // Parse command-line arguments
@@ -70,7 +71,7 @@ files.forEach(function(fileName) {
 
 
 // var dataObj = {
-//       specType : 'tape',
+//       specType : 'jasmine',
 //       specFileSrc : 'app.js',
 //       tests : [
 //         { testTitle: 'sum function',
@@ -98,7 +99,7 @@ files.forEach(function(fileName) {
 //         }
 //       ]
 //     };
-// if(dataObj.specType === 'tapes'){
+// if(dataObj.specType === 'jasmine'){
 // console.log(dataObj.specType);
-// console.log(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, dataObj));
+// console.log(tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, dataObj));
 // }
