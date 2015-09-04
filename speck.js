@@ -58,14 +58,14 @@ files.forEach(function(fileName) {
           testsReadyToWrite.push(jsTestString);
         }
         if (utilData.specType === 'jasmine') {
-          var jasmineTestString = tempUtils.addTestDataToBaseTemplateJasmine();
+          var jasmineTestString = tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, utilData);
           testsReadyToWrite.push(jasmineTestString);
         }
       }
     });
 
     // Write prepared tests to file
-    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite);
+    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite, testFW);
   });
 });
 

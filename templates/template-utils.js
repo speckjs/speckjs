@@ -111,13 +111,13 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   input:  (Array) strings ready to be written to file.
   output: null.
 */
-exports.writeToTestFile = function(testPath, fileName, tests) {
+exports.writeToTestFile = function(testPath, fileName, tests, specType) {
   // Logic for creating filename assumes it needs the following done: slice removes '/src', split removes '.js'
   var specFilePath = testPath + fileName.slice(4).split('.')[0] + '-spec.js';
   var writeStream = fs.createWriteStream(specFilePath);
 
   // Write require statements for testing library and parsed file
-  writeStream.write(exports.addRequire('test', 'tape'));
+  writeStream.write(exports.addRequire('test', specType));
   writeStream.write(exports.addRequire('file', '../' + fileName));
 
   // Write tests to file
