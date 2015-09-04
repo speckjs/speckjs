@@ -68,25 +68,25 @@ test('tape template function', function (t) {
       ]
     };
 
-    var errorObj = {
-      specType : 'tape',
-      specFileSrc : 'app.js',
-      tests : [
-        { testTitle: 'sum function',
-          assertions: [
-          { assertionMessage: 'return the sum of both params',
-            assertionInput: 'sum(6, 7)',
-            assertionOutput: '13'
-          },
-          { assertionMessage: 'return the sum of both params',
-            assertionType: 'equal',
-            assertionInput: 'sum(8, 9)',
-            assertionOutput: '17'
-          }
-          ]
-      }
-      ]
-    };
+    // var errorObj = {
+    //   specType : 'tape',
+    //   specFileSrc : 'app.js',
+    //   tests : [
+    //     { testTitle: 'sum function',
+    //       assertions: [
+    //       { assertionMessage: 'return the sum of both params',
+    //         assertionInput: 'sum(6, 7)',
+    //         assertionOutput: '13'
+    //       },
+    //       { assertionMessage: 'return the sum of both params',
+    //         assertionType: 'equal',
+    //         assertionInput: 'sum(8, 9)',
+    //         assertionOutput: '17'
+    //       }
+    //       ]
+    //   }
+    //   ]
+    // };
 
     var normalTestBlock = 'test(\'sum function\', function (t) {' +
                             't.equal(sum(6, 7), 13, \'return the sum of both params\')' +
