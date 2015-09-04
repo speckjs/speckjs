@@ -56,7 +56,9 @@ exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   input:  (Object) test data from parsed comments.
   output: (String) interpolated test block.
 */
-exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data){
+//A separate utility function for Jasmine, largely the same, but modularized incase there's
+//alot of specific jasmine logic we need to add
+exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data) {
   var tests = data.tests;
   var result = '';
 
@@ -109,6 +111,7 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   input:  (String) path to where you want new test file saved.
   input:  (String) name used to create test file.
   input:  (Array) strings ready to be written to file.
+  input:  (String) Framework to use in test file
   output: null.
 */
 exports.writeToTestFile = function(testPath, fileName, tests, specType) {
@@ -117,6 +120,7 @@ exports.writeToTestFile = function(testPath, fileName, tests, specType) {
   var writeStream = fs.createWriteStream(specFilePath);
 
   // Write require statements for testing library and parsed file
+  //Takes a parameter called specType that defines testing frame to require
   writeStream.write(exports.addRequire('test', specType));
   writeStream.write(exports.addRequire('file', '../' + fileName));
 

@@ -50,7 +50,7 @@ files.forEach(function(fileName) {
         var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
 
         // Convert utilData into usable JavaScript test code (Greg)
-        //Need conditional testing here to figure out whether Jasmine or Tape Test
+        // Conditional to find out whether specType is tape or jasmine
         if (utilData.specType === 'tape') {
           var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
           // Add prepared test string to array for later writing
