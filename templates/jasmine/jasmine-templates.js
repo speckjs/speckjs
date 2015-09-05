@@ -9,6 +9,7 @@ var baseTemplate = 'describe(\'{{=it.testTitle}}\', function() { ';
 var equalTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}.toBe({{=it.assertionOutput}}))\n});';
 var notEqualTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}.not.toBe({{=it.assertionOutput}}))\n});';
 var deepEqualTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nvar pass;\ntry {\npass = true;\nassert.deepEqual(file.{{=it.assertionInput}}, {{=it.assertionOutput}});\n} catch (e) {\npass = false;\n}\nexpect(pass).toBe(true);\n});\n';
+var notDeepEqualTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nvar pass;\ntry {\npass = true;\nassert.notDeepEqual(file.{{=it.assertionInput}}, {{=it.assertionOutput}});\n} catch (e) {\npass = false;\n}\nexpect(pass).toBe(true);\n});\n';
 
 module.exports = {
   require: tempRequire,
@@ -16,7 +17,6 @@ module.exports = {
   base: baseTemplate,
   equal: equalTemplate,
   notEqual: notEqualTemplate,
-  deepEqual: deepEqualTemplate
-  //Commented these out since we will be implementing them soon
-  //notDeepEqual: notDeepEqualTemplate
+  deepEqual: deepEqualTemplate,
+  notDeepEqual: notDeepEqualTemplate
 };
