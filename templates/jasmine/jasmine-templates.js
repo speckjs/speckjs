@@ -5,8 +5,8 @@ var tempRequire = 'var {{=it.varName}} = require(\'{{=it.module}}\');';
 var baseTemplate = 'describe(\'{{=it.testTitle}}\', function() { ';
 
 // Individual assertion templates
-var equalTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}{{=it.assertionType}}({{=it.assertionOutput}}))\n});';
-var notEqualTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}{{=it.assertionType}}({{=it.assertionOutput}}))\n});';
+var equalTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}.toBe({{=it.assertionOutput}}))\n});';
+var notEqualTemplate = 'it(\'{{=it.assertionMessage}}\', function() {\nexpect(file.{{=it.assertionInput}}.not.toBe({{=it.assertionOutput}}))\n});';
 
 module.exports = {
   require: tempRequire,
