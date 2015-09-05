@@ -121,6 +121,9 @@ exports.writeToTestFile = function(testPath, fileName, tests, specType) {
 
   // Write require statements for testing library and parsed file
   //Takes a parameter called specType that defines testing frame to require
+  if (specType === 'jasmine') {
+    writeStream.write(jasmineTemps.assert);
+  }
   writeStream.write(exports.addRequire('test', specType));
   writeStream.write(exports.addRequire('file', '../' + fileName));
 
