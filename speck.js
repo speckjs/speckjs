@@ -11,6 +11,7 @@ var path = require('path');
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
+var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
 // Parse command-line arguments
@@ -49,14 +50,56 @@ files.forEach(function(fileName) {
         var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
 
         // Convert utilData into usable JavaScript test code (Greg)
-        var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
-
-        // Add prepared test string to array for later writing
-        testsReadyToWrite.push(jsTestString);
+        // Conditional to find out whether specType is tape or jasmine
+        if (utilData.specType === 'tape') {
+          var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
+          // Add prepared test string to array for later writing
+          //Add result of condtional into this
+          testsReadyToWrite.push(jsTestString);
+        }
+        if (utilData.specType === 'jasmine') {
+          var jasmineTestString = tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, utilData);
+          testsReadyToWrite.push(jasmineTestString);
+        }
       }
     });
 
     // Write prepared tests to file
-    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite);
+    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite, testFW);
   });
 });
+
+
+// var dataObj = {
+//       specType : 'jasmine',
+//       specFileSrc : 'app.js',
+//       tests : [
+//         { testTitle: 'sum function',
+//           assertions: [
+//             { assertionMessage: 'return the sum of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'sum(6, 7)',
+//               assertionOutput: '13'
+//             },
+//             { assertionMessage: 'return the sum of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'sum(8, 9)',
+//               assertionOutput: '17'
+//             }
+//           ]
+//         },
+//         { testTitle: 'multiply function',
+//           assertions: [
+//             { assertionMessage: 'return the product of both params',
+//               assertionType: 'equal',
+//               assertionInput: 'mult(4, 5)',
+//               assertionOutput: '20'
+//             }
+//           ]
+//         }
+//       ]
+//     };
+// if(dataObj.specType === 'jasmine'){
+// console.log(dataObj.specType);
+// console.log(tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, dataObj));
+// }

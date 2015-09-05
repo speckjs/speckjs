@@ -1,6 +1,7 @@
 var fs = require('fs');
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
+var jasmineTemps = require('./jasmine/jasmine-templates.js');
 
 /*
   Create require statement from given args.
@@ -49,6 +50,41 @@ exports.addTestDataToBaseTemplate = function(baseTemp, data) {
   return result;
 };
 
+/*
+  Function that transforms an object into JavaScript test code.
+  input:  (String) base-template to build upon with each test and its respective assertions.
+  input:  (Object) test data from parsed comments.
+  output: (String) interpolated test block.
+*/
+//A separate utility function for Jasmine, largely the same, but modularized incase there's
+//alot of specific jasmine logic we need to add
+exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data) {
+  var tests = data.tests;
+  var result = '';
+
+  // For each test
+  for (var i=0; i < tests.length; i++) {
+    // Add title and assertion count to baseTemp
+    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
+                                              assertions: tests[i].assertions.length}) + '\n';
+
+    // For each assertion in test
+    for (var j=0; j < tests[i].assertions.length; j++) {
+      var tempToAdd = jasmineTemps[tests[i].assertions[j].assertionType];
+      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
+
+      // Add filled-in template to currentTest
+      currentTest += compiledAssertToAdd + '\n';
+    }
+
+    // Close currentTest block and add to result
+    result += currentTest + '}); \n';
+  }
+
+  // Return string representing interpolated test block
+  return result;
+};
+
 
 /*
   Creates an object in the format that the templating helper function expects.
@@ -75,15 +111,17 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   input:  (String) path to where you want new test file saved.
   input:  (String) name used to create test file.
   input:  (Array) strings ready to be written to file.
+  input:  (String) Framework to use in test file
   output: null.
 */
-exports.writeToTestFile = function(testPath, fileName, tests) {
+exports.writeToTestFile = function(testPath, fileName, tests, specType) {
   // Logic for creating filename assumes it needs the following done: slice removes '/src', split removes '.js'
   var specFilePath = testPath + fileName.slice(4).split('.')[0] + '-spec.js';
   var writeStream = fs.createWriteStream(specFilePath);
 
   // Write require statements for testing library and parsed file
-  writeStream.write(exports.addRequire('test', 'tape'));
+  //Takes a parameter called specType that defines testing frame to require
+  writeStream.write(exports.addRequire('test', specType));
   writeStream.write(exports.addRequire('file', '../' + fileName));
 
   // Write tests to file
