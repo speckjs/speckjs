@@ -1,6 +1,6 @@
-var fs = require('fs');
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
+var R = require('ramda');
 
 /*
   Create require statement from given args.
@@ -71,24 +71,18 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
 
 
 /*
-  Writes String to new test file.
-  input:  (String) path to where you want new test file saved.
-  input:  (String) name used to create test file.
-  input:  (Array) strings ready to be written to file.
-  output: null.
+  Assembles String for new test file.
+  input:  (String) name of file being parsed.
+  input:  (Array) strings ready to be added to test file.
+  output: (String) completely filled-out test template.
 */
-exports.writeToTestFile = function(testPath, fileName, tests) {
-  // Logic for creating filename assumes it needs the following done: slice removes '/src', split removes '.js'
-  var specFilePath = testPath + fileName.slice(4).split('.')[0] + '-spec.js';
-  var writeStream = fs.createWriteStream(specFilePath);
-
+exports.assembleTestFile = function(fileName, tests) {
   // Write require statements for testing library and parsed file
-  writeStream.write(exports.addRequire('test', 'tape'));
-  writeStream.write(exports.addRequire('file', '../' + fileName));
+  var output = '';
+  output += exports.addRequire('test', 'tape') + exports.addRequire('file', '../' + fileName);
 
-  // Write tests to file
-  tests.forEach(function(test) {
-    writeStream.write(test);
-  });
-  writeStream.end();
+  return R.reduce(function(testFile, test) {
+    return testFile + test;
+  }, output, tests);
 };
+
