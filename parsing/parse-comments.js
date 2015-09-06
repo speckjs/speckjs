@@ -100,6 +100,7 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
 // Parsing via acorn and returning an enriched object
 // containing the whole ast and tests array as properties.
 var parse = function(string, options) {
+  tests = [];
   options = options || acornOptions;
   var output = {};
   output.ast = acorn.parse(string, options);
