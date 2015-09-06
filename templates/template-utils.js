@@ -18,35 +18,33 @@ exports.addRequire = function(varName, module) {
 
 /*
   Function that transforms an object into JavaScript test code.
-  input:  (String) base-template to build upon with each test and its respective assertions.
   input:  (Object) test data from parsed comments.
+  input:  (String) base-template to build upon with each test and its respective assertions.
   output: (String) interpolated test block.
 */
-exports.addTestDataToBaseTemplate = function(baseTemp, data) {
-  var tests = data.tests;
-  var result = '';
+exports.addTestDataToBaseTemplate = function(data, baseTemp) {
+  var renderTests = R.reduce(function(testsString, test) {
+    return testsString + renderSingleTest(test, baseTemp);
+  }, '');
 
-  // For each test
-  for (var i=0; i < tests.length; i++) {
-    // Add title and assertion count to baseTemp
-    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
-                                              assertions: tests[i].assertions.length}) + '\n';
+  var renderSingleTest = function(test, baseTemp) {
+    var base = dot.template(baseTemp)({
+      testTitle: test.testTitle,
+      assertions: test.assertions.length
+    }) + '\n';
+    return base + renderAssertions(test.assertions);
+  };
 
-    // For each assertion in test
-    for (var j=0; j < tests[i].assertions.length; j++) {
-      var tempToAdd = tapeTemps[tests[i].assertions[j].assertionType];
-      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
+  var renderAssertions = R.reduce(function(assertionsString, assertion) {
+    return assertionsString + renderSingleAssertion(assertion);
+  }, '');
 
-      // Add filled-in template to currentTest
-      currentTest += compiledAssertToAdd + '\n';
-    }
+  var renderSingleAssertion = function(assertion) {
+    var tempToAdd = tapeTemps[assertion.assertionType];
+    return dot.template(tempToAdd)(assertion);
+  };
 
-    // Close currentTest block and add to result
-    result += currentTest + '}); \n';
-  }
-
-  // Return string representing interpolated test block
-  return result;
+  return renderTests(data.tests, baseTemp);
 };
 
 

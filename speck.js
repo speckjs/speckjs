@@ -38,7 +38,7 @@ var build = function build(file, options) {
     if (test.assertions.length) {
       var testDetails = extract.extractTestDetails(test.assertions);
       var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
-      var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
+      var jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
       return jsTestString;
     }
   });
