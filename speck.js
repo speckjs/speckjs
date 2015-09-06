@@ -4,85 +4,54 @@
   ============================================================
   Thatsweet produce sjs syntax file, that can be compiled into
   testSpec.js files via sweet.js ans a set of ad-hoc macros.
-
-  cli API:
-  $ node speck.js tape srcSpecs/ src/demo2.js
-
-  npm module api:
-  var speck = require('./speck.js');
-  speck.build(['src/demo.js'], 'srcSpecs/', {testFW: 'tape'});
 */
-var fs = require('fs');
-var path = require('path');
+
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
-(function IIFE() {
-  var defaultOptions = {
-    testFW: 'tape'
-  };
+var defaultOptions = {
+  testFW: 'tape',
+  onBuild: null
+};
 
-  function build(files, testPath, options) {
-    options = options || defaultOptions;
+/*
+  Public: Gets a file object with SpeckJS-formatted comments.
+  Either returns a spec file string, or invokes a callback with the string.
 
-    // Create i/o streams for each file
-    files.forEach(function(fileName) {
+  file  - An object that contains information about the file to parse, including:
+    name - A String of the file name.
+    content - A String of a JavaScript file.
+  options  - An Object of additional parameters (optional).
+    testFW - A String of the desired test framework for output ('tape', 'jasmine')
+    onBuild - A Function that is called with the returned string representing a spec file.
 
-      // Look in /src for files to parse (may want to refactor later for more flexibility)
-      var rStream = fs.createReadStream(path.join(__dirname, fileName));
+  Returns: If no onBuild function is provided, returns a string representing a spec file.
+*/
+var build = function build(file, options) {
+  options = options || defaultOptions;
+  var output;
+  var tests = comments.parse(file.content).tests;
 
-      // Gather data from file being read in
-      var data = '';
-      rStream.on('data', function(chunk) {
-        data += chunk;
-      });
+  var testsReadyToAssemble = tests.map(function(test) {
+    if (test.assertions.length) {
+      var testDetails = extract.extractTestDetails(test.assertions);
+      var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
+      var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
+      return jsTestString;
+    }
+  });
 
-      // Readable stream buffer is complete- data now ready for use
-      rStream.on('end', function() {
+  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble);
 
-        // Get SpeckJS comments from file data (Nick)
-        var tests = comments.parse(data).tests;
-        var testsReadyToWrite = [];
-
-        // Get test details
-        tests.forEach(function(test) {
-          // If assertions to be written
-          if (test.assertions.length) {
-            // Extract test details from parsed comments (Luke)
-            var testDetails = extract.extractTestDetails(test.assertions);
-
-            // Use testDetails to construct object to send into util function
-            var utilData = tempUtils.prepDataForTemplating(options.testFW, fileName, test, testDetails);
-
-            // Convert utilData into usable JavaScript test code (Greg)
-            var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
-
-            // Add prepared test string to array for later writing
-            testsReadyToWrite.push(jsTestString);
-          }
-        });
-
-        // Write prepared tests to file
-        tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite);
-      });
-    });
-
-  }
-
-
-  if (process.argv.length > 2) {
-    // Parse command-line arguments
-    // TODO: Refactor using flags for Cli
-    var args = process.argv.slice(2);
-    var cliOptions = { testFW: args[0] };
-    var testPath = args[1];
-    var files = args.slice(2);
-    build(files, testPath, cliOptions);
+  if (typeof options.onBuild === 'function') {
+    options.onBuild(output);
   } else {
-    module.exports = {
-      build: build
-    };
+    return output;
   }
-})();
+};
+
+module.exports = {
+  build: build
+};
