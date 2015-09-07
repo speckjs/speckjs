@@ -1,17 +1,17 @@
-var test = require('tape');var file = require('../src/demo.js');test('sum function', function(t) { t.plan(2); 
-t.equal(4, file.sum(1,3), 'returnt the sum of both params') 
-t.equal(20, file.sum(10,10), 'return the sum of both params') 
+var assert = require('assert');var test = require('jasmine');var file = require('../src/demo.js');describe('sum function', function() { 
+it('returnt the sum of both params', function() {expect(file.sum(1,3)equal(4))});
+it('return the sum of both params', function() {expect(file.sum(10,10)equal(20))});
 }); 
-test('product function', function(t) { t.plan(3); 
-t.equal(6, file.product(2,3), 'returnt the product of both params') 
-t.equal(100, file.product(10,10), 'return the product of both params') 
-t.equal(50, file.product(2,25), 'return the product of both params') 
+describe('product function', function() { 
+it('returnt the product of both params', function() {expect(file.product(2,3)equal(6))});
+it('return the product of both params', function() {expect(file.product(10,10)equal(100))});
+it('return the product of both params', function() {expect(file.product(2,25)equal(50))});
 }); 
-test('fff function', function(t) { t.plan(2); 
-t.equal(6, file.fff(200,3), 'returnt the product of both params') 
-t.equal(100, file.fff(1000,10), 'return the product of both params') 
+describe('fff function', function() { 
+it('returnt the product of both params', function() {expect(file.fff(200,3)equal(6))});
+it('return the product of both params', function() {expect(file.fff(1000,10)equal(100))});
 }); 
-test('ggg function', function(t) { t.plan(2); 
-t.equal(0, file.ggg(0,0), 'returnt the product of both params') 
-t.equal(0, file.ggg(0,0), 'return the product of both params') 
+describe('ggg function', function() { 
+it('returnt the product of both params', function() {expect(file.ggg(0,0)equal(0))});
+it('return the product of both params', function() {expect(file.ggg(0,0)equal(0))});
 }); 
