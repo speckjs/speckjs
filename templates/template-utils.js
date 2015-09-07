@@ -58,8 +58,30 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp) {
 */
 //A separate utility function for Jasmine, largely the same, but modularized incase there's
 //alot of specific jasmine logic we need to add
-exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data) {
+exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
 //Write function similar to tape base template function
+  var renderTests = R.reduce(function(testsString, test) {
+    return testsString + renderSingleTest(test, baseTemp) + eol;
+  }, '' + eol);
+
+  var renderSingleTest = function(test, baseTemp) {
+    var base = dot.template(baseTemp)({
+      testTitle: test.testTitle,
+      assertions: test.assertions.length
+    });
+    return base + eol + renderAssertions(test.assertions) + '});';
+  };
+
+  var renderAssertions = R.reduce(function(assertionsString, assertion) {
+    return assertionsString + renderSingleAssertion(assertion);
+  }, '');
+
+  var renderSingleAssertion = function(assertion) {
+    var tempToAdd = jasmineTemps[assertion.assertionType];
+    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+  };
+
+  return renderTests(data.tests, baseTemp);
 };
 
 
