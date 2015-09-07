@@ -40,7 +40,13 @@ var build = function build(file, options) {
       var testDetails = extract.extractTestDetails(test.assertions);
       var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
       // Add conditional for jasmine or tape test
-      var jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+      var jsTestString;
+      if(options.testFW === 'jasmine'){
+        jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, tapeTemps.base);
+      }
+      if(options.testFW === 'tape'){
+        jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+      }
       return jsTestString;
     }
   });
