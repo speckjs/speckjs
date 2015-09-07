@@ -1,7 +1,14 @@
 {
   "name": "speckjs",
-  "version": "0.0.1",
-  "description": "Making Unit Testing Sweeter",
+  "version": "0.0.2",
+  "description": "tiny comments, great tests",
+  "license": "MIT",
+  "contributors": [
+    "Luke Savage <luke.savage92@gmail.com>",
+    "Zach Sebag <zsebag@gmail.com>",
+    "Greg Varias <gregvarias@gmail.com>",
+    "Nick Balesyta <nick@balestra.ch>"
+  ],
   "main": "speck.js",
   "scripts": {
     "test": "grunt test"
@@ -10,8 +17,6 @@
     "type": "git",
     "url": "git+https://github.com/speckjs/speckjs.git"
   },
-  "author": "",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/speckjs/speckjs/issues"
   },
@@ -20,13 +25,12 @@
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "^0.6.1",
     "gruntify-eslint": "^1.0.1",
-    "tape": "^4.2.0",
-    "dot": "^1.0.3"
+    "tape": "^4.2.0"
   },
-
   "dependencies": {
     "extract-values": "^0.1.2",
     "acorn": "^2.3.0",
-    "ramda": "^0.17.1"
+    "ramda": "^0.17.1",
+    "dot": "^1.0.3"
   }
 }

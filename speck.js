@@ -6,100 +6,53 @@
   testSpec.js files via sweet.js ans a set of ad-hoc macros.
 */
 
-var fs = require('fs');
-var path = require('path');
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
-var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
+//var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
-// Parse command-line arguments
-var args = process.argv.slice(2);
-var testFW = args[0];
-var testPath = args[1];
-var files = args.slice(2);
+var defaultOptions = {
+  testFW: 'tape',
+  onBuild: null
+};
 
-// Create i/o streams for each file
-files.forEach(function(fileName) {
+/*
+  Public: Gets a file object with SpeckJS-formatted comments.
+  Either returns a spec file string, or invokes a callback with the string.
 
-  // Look in /src for files to parse (may want to refactor later for more flexibility)
-  var rStream = fs.createReadStream(path.join(__dirname, fileName));
+  file  - An object that contains information about the file to parse, including:
+    name - A String of the file name.
+    content - A String of a JavaScript file.
+  options  - An Object of additional parameters (optional).
+    testFW - A String of the desired test framework for output ('tape', 'jasmine')
+    onBuild - A Function that is called with the returned string representing a spec file.
 
-  // Gather data from file being read in
-  var data = '';
-  rStream.on('data', function(chunk) {
-    data += chunk;
+  Returns: If no onBuild function is provided, returns a string representing a spec file.
+*/
+var build = function build(file, options) {
+  options = options || defaultOptions;
+  var output;
+  var tests = comments.parse(file.content).tests;
+
+  var testsReadyToAssemble = tests.map(function(test) {
+    if (test.assertions.length) {
+      var testDetails = extract.extractTestDetails(test.assertions);
+      var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
+      var jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+      return jsTestString;
+    }
   });
 
-  // Readable stream buffer is complete- data now ready for use
-  rStream.on('end', function() {
+  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble);
 
-    // Get SpeckJS comments from file data (Nick)
-    var tests = comments.parse(data).tests;
-    var testsReadyToWrite = [];
+  if (typeof options.onBuild === 'function') {
+    options.onBuild(output);
+  } else {
+    return output;
+  }
+};
 
-    // Get test details
-    tests.forEach(function(test) {
-      // If assertions to be written
-      if (test.assertions.length) {
-        // Extract test details from parsed comments (Luke)
-        var testDetails = extract.extractTestDetails(test.assertions);
-
-        // Use testDetails to construct object to send into util function
-        var utilData = tempUtils.prepDataForTemplating(testFW, fileName, test, testDetails);
-
-        // Convert utilData into usable JavaScript test code (Greg)
-        // Conditional to find out whether specType is tape or jasmine
-        if (utilData.specType === 'tape') {
-          var jsTestString = tempUtils.addTestDataToBaseTemplate(tapeTemps.base, utilData);
-          // Add prepared test string to array for later writing
-          //Add result of condtional into this
-          testsReadyToWrite.push(jsTestString);
-        }
-        if (utilData.specType === 'jasmine') {
-          var jasmineTestString = tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, utilData);
-          testsReadyToWrite.push(jasmineTestString);
-        }
-      }
-    });
-
-    // Write prepared tests to file
-    tempUtils.writeToTestFile(testPath, fileName, testsReadyToWrite, testFW);
-  });
-});
-
-
-// var dataObj = {
-//       specType : 'jasmine',
-//       specFileSrc : 'app.js',
-//       tests : [
-//         { testTitle: 'sum function',
-//           assertions: [
-//             { assertionMessage: 'return the sum of both params',
-//               assertionType: 'equal',
-//               assertionInput: 'sum(6, 7)',
-//               assertionOutput: '13'
-//             },
-//             { assertionMessage: 'return the sum of both params',
-//               assertionType: 'equal',
-//               assertionInput: 'sum(8, 9)',
-//               assertionOutput: '17'
-//             }
-//           ]
-//         },
-//         { testTitle: 'multiply function',
-//           assertions: [
-//             { assertionMessage: 'return the product of both params',
-//               assertionType: 'equal',
-//               assertionInput: 'mult(4, 5)',
-//               assertionOutput: '20'
-//             }
-//           ]
-//         }
-//       ]
-//     };
-// if(dataObj.specType === 'jasmine'){
-// console.log(dataObj.specType);
-// console.log(tempUtils.addTestDataToBaseTemplateJasmine(jasmineTemps.base, dataObj));
-// }
+module.exports = {
+  build: build
+};

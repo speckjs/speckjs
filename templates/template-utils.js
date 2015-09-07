@@ -1,7 +1,8 @@
-var fs = require('fs');
 var dot = require('dot');
-var tapeTemps = require('./tape/tape-templates.js');
 var jasmineTemps = require('./jasmine/jasmine-templates.js');
+var tapeTemps = require('./tape/tape-templates.js');
+var R = require('ramda');
+var eol = require('os').EOL;
 
 /*
   Create require statement from given args.
@@ -13,41 +14,40 @@ exports.addRequire = function(varName, module) {
   return dot.template(tapeTemps.require)({
     varName: varName,
     module: module
-  });
+  }) + eol;
 };
 
 
 /*
   Function that transforms an object into JavaScript test code.
-  input:  (String) base-template to build upon with each test and its respective assertions.
   input:  (Object) test data from parsed comments.
+  input:  (String) base-template to build upon with each test and its respective assertions.
   output: (String) interpolated test block.
 */
-exports.addTestDataToBaseTemplate = function(baseTemp, data) {
-  var tests = data.tests;
-  var result = '';
+exports.addTestDataToBaseTemplate = function(data, baseTemp) {
 
-  // For each test
-  for (var i=0; i < tests.length; i++) {
-    // Add title and assertion count to baseTemp
-    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
-                                              assertions: tests[i].assertions.length}) + '\n';
+  var renderTests = R.reduce(function(testsString, test) {
+    return testsString + renderSingleTest(test, baseTemp) + eol;
+  }, '' + eol);
 
-    // For each assertion in test
-    for (var j=0; j < tests[i].assertions.length; j++) {
-      var tempToAdd = tapeTemps[tests[i].assertions[j].assertionType];
-      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
+  var renderSingleTest = function(test, baseTemp) {
+    var base = dot.template(baseTemp)({
+      testTitle: test.testTitle,
+      assertions: test.assertions.length
+    });
+    return base + eol + renderAssertions(test.assertions) + '});';
+  };
 
-      // Add filled-in template to currentTest
-      currentTest += compiledAssertToAdd + '\n';
-    }
+  var renderAssertions = R.reduce(function(assertionsString, assertion) {
+    return assertionsString + renderSingleAssertion(assertion);
+  }, '');
 
-    // Close currentTest block and add to result
-    result += currentTest + '}); \n';
-  }
+  var renderSingleAssertion = function(assertion) {
+    var tempToAdd = tapeTemps[assertion.assertionType];
+    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+  };
 
-  // Return string representing interpolated test block
-  return result;
+  return renderTests(data.tests, baseTemp);
 };
 
 /*
@@ -107,29 +107,17 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
 
 
 /*
-  Writes String to new test file.
-  input:  (String) path to where you want new test file saved.
-  input:  (String) name used to create test file.
-  input:  (Array) strings ready to be written to file.
-  input:  (String) Framework to use in test file
-  output: null.
+  Assembles String for new test file.
+  input:  (String) name of file being parsed.
+  input:  (Array) strings ready to be added to test file.
+  output: (String) completely filled-out test template.
 */
-exports.writeToTestFile = function(testPath, fileName, tests, specType) {
-  // Logic for creating filename assumes it needs the following done: slice removes '/src', split removes '.js'
-  var specFilePath = testPath + fileName.slice(4).split('.')[0] + '-spec.js';
-  var writeStream = fs.createWriteStream(specFilePath);
-
+exports.assembleTestFile = function(fileName, tests) {
   // Write require statements for testing library and parsed file
-  //Takes a parameter called specType that defines testing frame to require
-  if (specType === 'jasmine') {
-    writeStream.write(jasmineTemps.assert);
-  }
-  writeStream.write(exports.addRequire('test', specType));
-  writeStream.write(exports.addRequire('file', '../' + fileName));
+  var output = '';
+  output += exports.addRequire('test', 'tape') + exports.addRequire('file', '../' + fileName);
 
-  // Write tests to file
-  tests.forEach(function(test) {
-    writeStream.write(test);
-  });
-  writeStream.end();
+  return R.reduce(function(testFile, test) {
+    return testFile + test;
+  }, output, tests);
 };
