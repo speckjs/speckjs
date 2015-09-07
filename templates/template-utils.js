@@ -59,30 +59,7 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp) {
 //A separate utility function for Jasmine, largely the same, but modularized incase there's
 //alot of specific jasmine logic we need to add
 exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data) {
-  var tests = data.tests;
-  var result = '';
-
-  // For each test
-  for (var i=0; i < tests.length; i++) {
-    // Add title and assertion count to baseTemp
-    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
-                                              assertions: tests[i].assertions.length}) + '\n';
-
-    // For each assertion in test
-    for (var j=0; j < tests[i].assertions.length; j++) {
-      var tempToAdd = jasmineTemps[tests[i].assertions[j].assertionType];
-      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
-
-      // Add filled-in template to currentTest
-      currentTest += compiledAssertToAdd + '\n';
-    }
-
-    // Close currentTest block and add to result
-    result += currentTest + '}); \n';
-  }
-
-  // Return string representing interpolated test block
-  return result;
+//Write function similar to tape base template function
 };
 
 
@@ -112,6 +89,9 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   input:  (Array) strings ready to be added to test file.
   output: (String) completely filled-out test template.
 */
+
+//Add a paramter for framework instead of hard coding tape
+//Add logic for requiring assert library for equals/deep equals
 exports.assembleTestFile = function(fileName, tests) {
   // Write require statements for testing library and parsed file
   var output = '';
