@@ -117,6 +117,9 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
 exports.assembleTestFile = function(fileName, tests, framework) {
   // Write require statements for testing library and parsed file
   var output = '';
+  if (framework === 'jasmine'){
+    output += jasmineTemps.assert + eol;
+  }
   output += exports.addRequire('test', framework) + exports.addRequire('file', '../' + fileName);
 
   return R.reduce(function(testFile, test) {
