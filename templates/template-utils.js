@@ -92,10 +92,10 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
 
 //Add a paramter for framework instead of hard coding tape
 //Add logic for requiring assert library for equals/deep equals
-exports.assembleTestFile = function(fileName, tests) {
+exports.assembleTestFile = function(fileName, tests, framework) {
   // Write require statements for testing library and parsed file
   var output = '';
-  output += exports.addRequire('test', 'tape') + exports.addRequire('file', '../' + fileName);
+  output += exports.addRequire('test', framework) + exports.addRequire('file', '../' + fileName);
 
   return R.reduce(function(testFile, test) {
     return testFile + test;

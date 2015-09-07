@@ -51,7 +51,7 @@ var build = function build(file, options) {
     }
   });
 
-  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble);
+  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
 
   if (typeof options.onBuild === 'function') {
     options.onBuild(output);
