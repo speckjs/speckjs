@@ -1,6 +1,7 @@
 var dot = require('dot');
 var tapeTemps = require('./tape/tape-templates.js');
 var R = require('ramda');
+var eol = require('os').EOL;
 
 /*
   Create require statement from given args.
@@ -12,7 +13,7 @@ exports.addRequire = function(varName, module) {
   return dot.template(tapeTemps.require)({
     varName: varName,
     module: module
-  });
+  }) + eol;
 };
 
 
@@ -23,16 +24,17 @@ exports.addRequire = function(varName, module) {
   output: (String) interpolated test block.
 */
 exports.addTestDataToBaseTemplate = function(data, baseTemp) {
+
   var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp);
-  }, '');
+    return testsString + renderSingleTest(test, baseTemp) + eol;
+  }, '' + eol);
 
   var renderSingleTest = function(test, baseTemp) {
     var base = dot.template(baseTemp)({
       testTitle: test.testTitle,
       assertions: test.assertions.length
-    }) + '\n';
-    return base + renderAssertions(test.assertions);
+    });
+    return base + eol + renderAssertions(test.assertions) + '});';
   };
 
   var renderAssertions = R.reduce(function(assertionsString, assertion) {
@@ -41,7 +43,7 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = tapeTemps[assertion.assertionType];
-    return dot.template(tempToAdd)(assertion);
+    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
   };
 
   return renderTests(data.tests, baseTemp);
@@ -83,4 +85,3 @@ exports.assembleTestFile = function(fileName, tests) {
     return testFile + test;
   }, output, tests);
 };
-
