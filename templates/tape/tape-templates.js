@@ -7,12 +7,13 @@ var baseTemplate =
 t.plan({{=it.assertions}}); \ ';
 
 // Individual assertion templates
-var equalTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
-var notEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
-var notDeepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
-var deepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
-var okTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
-var notOkTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\') \n';
+var equalTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+var notEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+var notDeepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+var deepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+var okTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+var notOkTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+
 // Export templates
 module.exports = {
   require: tempRequire,
