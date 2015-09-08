@@ -1,6 +1,4 @@
 var test = require('tape');
-var tempUtils = require('../templates/template-utils.js');
-var tapeTemps = require('../templates/tape/tape-templates.js');
 var eol = require('os').EOL;
 var speck = require('../speck.js');
 var path = require('path');
