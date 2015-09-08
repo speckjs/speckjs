@@ -10,7 +10,7 @@ var result1 = speck.build({
   name: 'demo.js',
   content: testString1
 }, {
-  testFW: 'tape'
+  testFW: 'jasmine'
 });
 
 var result2 = speck.build({

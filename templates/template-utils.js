@@ -58,31 +58,30 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp) {
 */
 //A separate utility function for Jasmine, largely the same, but modularized incase there's
 //alot of specific jasmine logic we need to add
-exports.addTestDataToBaseTemplateJasmine = function(baseTemp, data) {
-  var tests = data.tests;
-  var result = '';
+exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
+//Write function similar to tape base template function
+  var renderTests = R.reduce(function(testsString, test) {
+    return testsString + renderSingleTest(test, baseTemp) + eol;
+  }, '' + eol);
 
-  // For each test
-  for (var i=0; i < tests.length; i++) {
-    // Add title and assertion count to baseTemp
-    var currentTest = dot.template(baseTemp)({testTitle: tests[i].testTitle,
-                                              assertions: tests[i].assertions.length}) + '\n';
+  var renderSingleTest = function(test, baseTemp) {
+    var base = dot.template(baseTemp)({
+      testTitle: test.testTitle,
+      assertions: test.assertions.length
+    });
+    return base + eol + renderAssertions(test.assertions) + '});';
+  };
 
-    // For each assertion in test
-    for (var j=0; j < tests[i].assertions.length; j++) {
-      var tempToAdd = jasmineTemps[tests[i].assertions[j].assertionType];
-      var compiledAssertToAdd = dot.template(tempToAdd)(tests[i].assertions[j]);
+  var renderAssertions = R.reduce(function(assertionsString, assertion) {
+    return assertionsString + renderSingleAssertion(assertion);
+  }, '');
 
-      // Add filled-in template to currentTest
-      currentTest += compiledAssertToAdd + '\n';
-    }
+  var renderSingleAssertion = function(assertion) {
+    var tempToAdd = jasmineTemps[assertion.assertionType];
+    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+  };
 
-    // Close currentTest block and add to result
-    result += currentTest + '}); \n';
-  }
-
-  // Return string representing interpolated test block
-  return result;
+  return renderTests(data.tests, baseTemp);
 };
 
 
@@ -112,10 +111,16 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   input:  (Array) strings ready to be added to test file.
   output: (String) completely filled-out test template.
 */
-exports.assembleTestFile = function(fileName, tests) {
+
+//Add a paramter for framework instead of hard coding tape
+//Add logic for requiring assert library for equals/deep equals
+exports.assembleTestFile = function(fileName, tests, framework) {
   // Write require statements for testing library and parsed file
   var output = '';
-  output += exports.addRequire('test', 'tape') + exports.addRequire('file', '../' + fileName);
+  if (framework === 'jasmine') {
+    output += jasmineTemps.assert + eol;
+  }
+  output += exports.addRequire('test', framework) + exports.addRequire('file', '../' + fileName);
 
   return R.reduce(function(testFile, test) {
     return testFile + test;

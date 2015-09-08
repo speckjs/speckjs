@@ -9,7 +9,7 @@
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
-//var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
+var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 
 var defaultOptions = {
@@ -39,12 +39,18 @@ var build = function build(file, options) {
     if (test.assertions.length) {
       var testDetails = extract.extractTestDetails(test.assertions);
       var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
-      var jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+      var jsTestString;
+      if (options.testFW === 'jasmine') {
+        jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
+      }
+      if (options.testFW === 'tape') {
+        jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+      }
       return jsTestString;
     }
   });
 
-  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble);
+  output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
 
   if (typeof options.onBuild === 'function') {
     options.onBuild(output);
