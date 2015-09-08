@@ -9,8 +9,10 @@ var fs = require('fs');
 // TEST FIXTURE
 
 test('tape template function', function (t) {
-    t.plan(1); // How many tests?
-    var testString1 = fs.readFileSync(path.join(__dirname, 'testDemoNormal.js'), {encoding: 'utf8'});
+    t.plan(3); // How many tests?
+    var testStringNormal = fs.readFileSync(path.join(__dirname, 'testDemoNormal.js'), {encoding: 'utf8'});
+    var testStringSingle = fs.readFileSync(path.join(__dirname, 'testDemoSingle.js'), {encoding: 'utf8'});
+    var testStringEmpty = fs.readFileSync(path.join(__dirname, 'testDemoEmpty.js'), {encoding: 'utf8'});
     var normalTestBlock = 'var test = require(\'tape\');' + eol + 'var file = require(\'testDemoNormal.js\');' + eol + eol +
                           'test(\'sum function\', function (t) {' + eol + '  ' +
                             't.plan(2)' + eol + '  ' +
@@ -28,13 +30,12 @@ test('tape template function', function (t) {
                           ')}';
     var emptyTestBlock = 'test(\'sum function\', function (t) {' + eol +
                           '})';
-    // //It takes an empty object and outputs an empty test block
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, emptyTestObj), emptyTestBlock, 'Takes an test with 0 assertion and outputs a base template');
-    // // //It takes one test block and produces a properly formatted tape test
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, singleTestObj), singleTestBlock, 'Takes an test with 0 assertion and outputs a base template');
-    // //It takes multiple test blocks and produces a properly formatted tape test
-    t.equal(speck.build({ name: 'testDemoNormal.js', content: testString1 }, { testFW: 'tape' }), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    // //If a field is missing, return error, missing field
+    //It takes an empty object and outputs an empty test block
+    t.equal(speck.build({ name: 'testDemoEmpty.js', content: testStringEmpty }, { testFW: 'tape' }), emptyTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    //It takes one test block and produces a properly formatted tape test
+    t.equal(speck.build({ name: 'testDemoSingle.js', content: testStringSingle }, { testFW: 'tape' }), singleTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    //It takes multiple test blocks and produces a properly formatted tape test
+    t.equal(speck.build({ name: 'testDemoNormal.js', content: testStringNormal }, { testFW: 'tape' }), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    //If a field is missing, return error, missing field
     // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, errorObj), 'Please provide properly formatted comment', 'Takes an incorrectly formatted object and returns an error message');
   });
-  // console.log(speck.build({ name: 'testDemo.js', content: testString1 }, { testFW: 'tape' }));
