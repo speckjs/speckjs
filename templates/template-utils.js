@@ -24,18 +24,20 @@ exports.addRequire = function(varName, module) {
   input:  (String) base-template to build upon with each test and its respective assertions.
   output: (String) interpolated test block.
 */
-exports.addTestDataToBaseTemplate = function(data, baseTemp) {
+exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp) + eol;
+    return testsString + renderSingleTest(test, baseTemp, planTemp) + eol;
   }, '' + eol);
 
-  var renderSingleTest = function(test, baseTemp) {
+  var renderSingleTest = function(test, baseTemp, planTemp) {
     var base = dot.template(baseTemp)({
-      testTitle: test.testTitle,
+      testTitle: test.testTitle
+    });
+    var plan = dot.template(planTemp)({
       assertions: test.assertions.length
     });
-    return base + eol + renderAssertions(test.assertions) + '});';
+    return base + eol + ' ' + ' ' + plan + eol + renderAssertions(test.assertions) + '});';
   };
 
   var renderAssertions = R.reduce(function(assertionsString, assertion) {

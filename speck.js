@@ -44,7 +44,7 @@ var build = function build(file, options) {
         jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
       }
       if (options.testFW === 'tape') {
-        jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base);
+        jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base, tapeTemps.plan);
       }
       return jsTestString;
     }
