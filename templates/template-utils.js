@@ -120,7 +120,7 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   if (framework === 'jasmine') {
     output += jasmineTemps.assert + eol;
   }
-  output += exports.addRequire('test', framework) + exports.addRequire('file', '../' + fileName);
+  output += exports.addRequire('test', framework) + exports.addRequire('file', fileName);
 
   return R.reduce(function(testFile, test) {
     return testFile + test;
