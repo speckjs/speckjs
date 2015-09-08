@@ -2,103 +2,29 @@ var test = require('tape');
 var tempUtils = require('../templates/template-utils.js');
 var tapeTemps = require('../templates/tape/tape-templates.js');
 var eol = require('os').EOL;
+var speck = require('../speck.js');
+var path = require('path');
+var fs = require('fs');
 
 // TEST FIXTURE
 
 test('tape template function', function (t) {
-    t.plan(3); // How many tests?
-    //Dummy data for parsed comment
-    var dataObj = {
-      specType : 'tape',
-      specFileSrc : 'app.js',
-      tests : [
-        { testTitle: 'sum function',
-          assertions: [
-            { assertionMessage: 'return the sum of both params',
-              assertionType: 'equal',
-              assertionInput: 'sum(6, 7)',
-              assertionOutput: '13'
-            },
-            { assertionMessage: 'return the sum of both params',
-              assertionType: 'equal',
-              assertionInput: 'sum(8, 9)',
-              assertionOutput: '17'
-            }
-          ]
-        },
-        { testTitle: 'multiply function',
-          assertions: [
-            { assertionMessage: 'return the product of both params',
-              assertionType: 'equal',
-              assertionInput: 'mult(4, 5)',
-              assertionOutput: '20'
-            }
-          ]
-        }
-      ]
-    };
-
-    var emptyTestObj = {
-      specType : 'tape',
-      specFileSrc : 'app.js',
-      tests : [
-        { testTitle: 'sum function',
-          assertions: []
-        }
-      ]
-    };
-
-    var singleTestObj = {
-      specType : 'tape',
-      specFileSrc : 'app.js',
-      tests : [
-        { testTitle: 'sum function',
-          assertions: [
-          { assertionMessage: 'return the sum of both params',
-            assertionType: 'equal',
-            assertionInput: 'sum(6, 7)',
-            assertionOutput: '13'
-          },
-          { assertionMessage: 'return the sum of both params',
-            assertionType: 'equal',
-            assertionInput: 'sum(8, 9)',
-            assertionOutput: '17'
-          }
-          ]
-      }
-      ]
-    };
-
-    // var errorObj = {
-    //   specType : 'tape',
-    //   specFileSrc : 'app.js',
-    //   tests : [
-    //     { testTitle: 'sum function',
-    //       assertions: [
-    //       { assertionMessage: 'return the sum of both params',
-    //         assertionInput: 'sum(6, 7)',
-    //         assertionOutput: '13'
-    //       },
-    //       { assertionMessage: 'return the sum of both params',
-    //         assertionType: 'equal',
-    //         assertionInput: 'sum(8, 9)',
-    //         assertionOutput: '17'
-    //       }
-    //       ]
-    //   }
-    //   ]
-    // };
-
-    var normalTestBlock = 'test(\'sum function\', function (t) {' + eol + '  ' +
-                            't.equal(sum(6, 7), 13, \'return the sum of both params\');' + eol + '  ' +
-                            't.equal(sum(8, 9), 17, \'return the sum of both params\');' + eol +
-                          ')}' + eol +
+    t.plan(1); // How many tests?
+    var testString1 = fs.readFileSync(path.join(__dirname, 'testDemoNormal.js'), {encoding: 'utf8'});
+    var normalTestBlock = 'var test = require(\'tape\');' + eol + 'var file = require(\'testDemoNormal.js\');' + eol + eol +
+                          'test(\'sum function\', function (t) {' + eol + '  ' +
+                            't.plan(2)' + eol + '  ' +
+                            't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  ' +
+                            't.equal(17, file.sum(8, 9), \'return the sum of both params\');' + eol +
+                          ')}' + eol + eol +
                           'test(\'multiply function\', function (t) {' + eol + '  ' +
-                            't.equal(multiply(4, 5), 20, \'return the product of both params\');' +
+
+                            't.equal(20, file.multiply(4, 5), \'return the product of both params\');' + eol +
                           ')}';
     var singleTestBlock = 'test(\'sum function\', function (t) {' + eol + '  ' +
-                            't.equal(sum(6, 7), 13, \'return the sum of both params\');' + eol + '  ' +
-                            't.equal(sum(8, 9), 17, \'return the sum of both params\');' + eol +
+                            't.plan(2)' + eol +'  ' +
+                            't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  ' +
+                            't.equal(17, file.sum(8, 9), \'return the sum of both params\');' + eol +
                           ')}';
     var emptyTestBlock = 'test(\'sum function\', function (t) {' + eol +
                           '})';
@@ -107,7 +33,8 @@ test('tape template function', function (t) {
     // // //It takes one test block and produces a properly formatted tape test
     // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, singleTestObj), singleTestBlock, 'Takes an test with 0 assertion and outputs a base template');
     // //It takes multiple test blocks and produces a properly formatted tape test
-    // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, dataObj), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    t.equal(speck.build({ name: 'testDemoNormal.js', content: testString1 }, { testFW: 'tape' }), normalTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
     // //If a field is missing, return error, missing field
     // t.equal(tempUtils.addTestDataToBaseTemplate(tapeTemps.base, errorObj), 'Please provide properly formatted comment', 'Takes an incorrectly formatted object and returns an error message');
   });
+  // console.log(speck.build({ name: 'testDemo.js', content: testString1 }, { testFW: 'tape' }));
