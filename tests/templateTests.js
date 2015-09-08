@@ -53,16 +53,10 @@ test('tape template function', function (t) {
     var emptyJasmineTestBlock = 'var assert = require(\'assert\');' + eol + 'var jasmine = require(\'jasmine\');' + eol + 'var file = require(\'testDemoNormal.js\');' + eol + eol +
                           'describe(\'sum function\', function () {' + eol +
                           ')};';
-    //It takes an empty object and outputs an empty test block
-    t.equal(speck.build({ name: 'testDemoEmpty.js', content: testStringEmpty }, { testFW: 'tape' }), emptyTapeTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    //It takes one test block and produces a properly formatted tape test
-    t.equal(speck.build({ name: 'testDemoSingle.js', content: testStringSingle }, { testFW: 'tape' }), singleTapeTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    //It takes multiple test blocks and produces a properly formatted tape test
-    t.equal(speck.build({ name: 'testDemoNormal.js', content: testStringNormal }, { testFW: 'tape' }), normalTapeTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    //It takes an empty object and outputs an empty test block
-    t.equal(speck.build({ name: 'testDemoEmpty.js', content: testStringEmpty }, { testFW: 'jasmine' }), emptyJasmineTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    //It takes one test block and produces a properly formatted tape test
-    t.equal(speck.build({ name: 'testDemoSingle.js', content: testStringSingle }, { testFW: 'jasmine' }), singleJasmineTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
-    //It takes multiple test blocks and produces a properly formatted tape test
-    t.equal(speck.build({ name: 'testDemoNormal.js', content: testStringNormal }, { testFW: 'jasmine' }), normalJasmineTestBlock, 'Takes a properly formatted object and outputs a formatted test block');
+    t.equal(speck.build({ name: 'testDemoEmpty.js', content: testStringEmpty }, { testFW: 'tape' }), emptyTapeTestBlock, 'Takes in a commented test file and outputs an empty tape test');
+    t.equal(speck.build({ name: 'testDemoSingle.js', content: testStringSingle }, { testFW: 'tape' }), singleTapeTestBlock, 'Takes in a commented test file and outputs a single tape test');
+    t.equal(speck.build({ name: 'testDemoNormal.js', content: testStringNormal }, { testFW: 'tape' }), normalTapeTestBlock, 'Takes in a commented test file and outputs multiple tape tests');
+    t.equal(speck.build({ name: 'testDemoEmpty.js', content: testStringEmpty }, { testFW: 'jasmine' }), emptyJasmineTestBlock, 'Takes in a commented test file and outputs an empty jasmine test');
+    t.equal(speck.build({ name: 'testDemoSingle.js', content: testStringSingle }, { testFW: 'jasmine' }), singleJasmineTestBlock, 'Takes in a commented test file and outputs a single jasmine test');
+    t.equal(speck.build({ name: 'testDemoNormal.js', content: testStringNormal }, { testFW: 'jasmine' }), normalJasmineTestBlock, 'Takes in a commented test file and outputs multiple jasmine tests');
   });
