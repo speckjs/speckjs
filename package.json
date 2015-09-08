@@ -1,13 +1,13 @@
 {
   "name": "speckjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "tiny comments, great tests",
   "license": "MIT",
   "contributors": [
     "Luke Savage <luke.savage92@gmail.com>",
     "Zach Sebag <zsebag@gmail.com>",
     "Greg Varias <gregvarias@gmail.com>",
-    "Nick Balesyta <nick@balestra.ch>"
+    "Nick Balestra <nick@balestra.ch>"
   ],
   "main": "speck.js",
   "scripts": {
