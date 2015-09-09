@@ -1,8 +1,8 @@
-var dot = require('dot');
 var jasmineTemps = require('./jasmine/jasmine-templates.js');
 var tapeTemps = require('./tape/tape-templates.js');
 var R = require('ramda');
 var eol = require('os').EOL;
+var indent = ' ' + ' ';
 
 /*
   Create require statement from given args.
@@ -11,10 +11,10 @@ var eol = require('os').EOL;
   output: (String) require statement using given arguments.
 */
 exports.addRequire = function(varName, module) {
-  return dot.template(tapeTemps.require)({
+  return tapeTemps.require({
     varName: varName,
     module: module
-  }) + eol;
+  });
 };
 
 
@@ -27,17 +27,17 @@ exports.addRequire = function(varName, module) {
 exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp, planTemp) + eol;
-  }, '' + eol);
+    return testsString + renderSingleTest(test, baseTemp, planTemp);
+  }, '');
 
   var renderSingleTest = function(test, baseTemp, planTemp) {
-    var base = dot.template(baseTemp)({
+    var base = baseTemp({
       testTitle: test.testTitle
     });
-    var plan = dot.template(planTemp)({
+    var plan = planTemp({
       assertions: test.assertions.length
     });
-    return base + eol + ' ' + ' ' + plan + eol + renderAssertions(test.assertions) + '});';
+    return eol + base + indent + plan + renderAssertions(test.assertions) + '});' + eol;
   };
 
   var renderAssertions = R.reduce(function(assertionsString, assertion) {
@@ -46,7 +46,7 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = tapeTemps[assertion.assertionType];
-    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+    return indent + tempToAdd(assertion);
   };
 
   return renderTests(data.tests, baseTemp);
@@ -67,7 +67,7 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
   }, '' + eol);
 
   var renderSingleTest = function(test, baseTemp) {
-    var base = dot.template(baseTemp)({
+    var base = baseTemp({
       testTitle: test.testTitle,
       assertions: test.assertions.length
     });
@@ -80,7 +80,7 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = jasmineTemps[assertion.assertionType];
-    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+    return tempToAdd(assertion) + eol;
   };
 
   return renderTests(data.tests, baseTemp);
