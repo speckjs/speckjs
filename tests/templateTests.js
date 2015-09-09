@@ -20,12 +20,14 @@ test('tape template function', function (t) {
                           'test(\'multiply function\', function (t) {' + eol + '  ' +
                             't.equal(20, file.multiply(4, 5), \'return the product of both params\');' + eol +
                           ')};';
-    var singleTapeTestBlock = 'test(\'sum function\', function (t) {' + eol + '  ' +
+    var singleTapeTestBlock = 'var test = require(\'tape\');' + eol + 'var file = require(\'testDemoNormal.js\');' + eol + eol +
+                          'test(\'sum function\', function (t) {' + eol + '  ' +
                             't.plan(2);' + eol +'  ' +
                             't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  ' +
                             't.equal(17, file.sum(8, 9), \'return the sum of both params\');' + eol +
                           ')};';
-    var emptyTapeTestBlock = 'test(\'sum function\', function (t) {' + eol +
+    var emptyTapeTestBlock = 'var test = require(\'tape\');' + eol + eol +
+                          'test(\'sum function\', function (t) {' + eol +
                           '});';
     var normalJasmineTestBlock = 'var assert = require(\'assert\');' + eol + 'var jasmine = require(\'jasmine\');' + eol + 'var file = require(\'testDemoNormal.js\');' + eol + eol +
                           'describe(\'sum function\', function () {' + eol + '  ' +
