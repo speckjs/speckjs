@@ -1,6 +1,6 @@
 //`SpeckJS V0.0.3`
 
-// Dependecies and default options for build function
+// Dependecies and default options for build function.
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
@@ -12,16 +12,17 @@ var defaultOptions = {
   onBuild: null
 };
 
-//  Takes a file object with SpeckJS-formatted comments.
-//  Either returns a spec file string if no callback function provided, or invokes a callback with the string.
+//  `build` takes a file object with SpeckJS-formatted comments as input.
+//  Returns a string representation of a spec file and optionally invokes a callback on that string if it is provided
+//  in the options hash.
 var build = function build(file, options) {
   options = options || defaultOptions;
   var output;
-  //  Extracts the tests from the input file based on SpeckJS syntax.
+  //  Parses the tests from the input file based on SpeckJS syntax.
   var tests = comments.parse(file.content).tests;
   var testsReadyToAssemble = tests.map(function(test) {
     var testDetails;
-    //  If assertions exist, gathers the atomic units of test assertions.
+    //  If assertions exist, gathers the atomzic units of test assertions.
     //  Otherwise, set to empty string to create blank test.
     if (test.assertions.length) {
       testDetails = extract.extractTestDetails(test.assertions);
@@ -40,7 +41,8 @@ var build = function build(file, options) {
     return jsTestString;
   });
 
-  // Final assembly of tests, then if there is a callback it is used. Otherwise, just return the string output.
+  //  Assembles all the tests into one string.
+  //  If a callback was provided it is invoked, otherwise `build` just returns the `output` string.
   output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
 
   if (typeof options.onBuild === 'function') {

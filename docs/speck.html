@@ -40,7 +40,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Dependecies and default options for build function</p>
+              <p>Dependecies and default options for build function.</p>
 
             </div>
             
@@ -64,8 +64,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p> Takes a file object with SpeckJS-formatted comments.
- Either returns a spec file string if no callback function provided, or invokes a callback with the string.</p>
+              <p> <code>build</code> takes a file object with SpeckJS-formatted comments as input.
+ Returns a string representation of a spec file and optionally invokes a callback on that string if it is provided
+ in the options hash.</p>
 
             </div>
             
@@ -82,7 +83,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p> Extracts the tests from the input file based on SpeckJS syntax.</p>
+              <p> Parses the tests from the input file based on SpeckJS syntax.</p>
 
             </div>
             
@@ -99,8 +100,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
+<<<<<<< HEAD
               <p> If assertions exist, gathers the atomic units of test assertions.
  Otherwise, set to empty string to create blank test.</p>
+=======
+              <p> Extracts and gathers the atomic units of test assertions.</p>
+>>>>>>> Updated some wording to make the comments more clear
 
             </div>
             
@@ -121,7 +126,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p> Assemble the assertions into a test depending on the testing framework specified.</p>
+              <p> Assemble the assertions into a test string with proper syntax based on the testing framework specified.</p>
 
             </div>
             
@@ -143,7 +148,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Final assembly of tests, then if there is a callback it is used. Otherwise, just return the string output.</p>
+              <p> Assembles all the tests into one string.
+ If a callback was provided it is invoked, otherwise <code>build</code> just returns the <code>output</code> string.</p>
 
             </div>
             
