@@ -34,20 +34,22 @@ var build = function build(file, options) {
   options = options || defaultOptions;
   var output;
   var tests = comments.parse(file.content).tests;
-
   var testsReadyToAssemble = tests.map(function(test) {
+    var testDetails;
     if (test.assertions.length) {
-      var testDetails = extract.extractTestDetails(test.assertions);
-      var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
-      var jsTestString;
-      if (options.testFW === 'jasmine') {
-        jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
-      }
-      if (options.testFW === 'tape') {
-        jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base, tapeTemps.plan);
-      }
-      return jsTestString;
+      testDetails = extract.extractTestDetails(test.assertions);
+    } else {
+      testDetails = '';
     }
+    var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
+    var jsTestString;
+    if (options.testFW === 'jasmine') {
+      jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
+    }
+    if (options.testFW === 'tape') {
+      jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base, tapeTemps.plan);
+    }
+    return jsTestString;
   });
 
   output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
