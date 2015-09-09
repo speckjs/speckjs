@@ -7,6 +7,10 @@ var assertionTypeMap = {
   '!===': 'notDeepEqual'
 };
 
+var test = [
+  'sum(10,10) asdfasdf== 20 (return the sum of both params)'
+];
+
 //Helper takes string as an input, matches to hash map and returns the converted value
 var convertAssertionType = function(type) {
   return assertionTypeMap[type];
@@ -20,12 +24,19 @@ var extractTestDetails = function(parsedAssertions) {
     assertionParts = extractValues(assertion, '{assertionInput} {assertionType} {assertionOutput} ({assertionMessage})');
 
     //Convert assertion type from symbol to usable syntax
-    assertionParts.assertionType = convertAssertionType(assertionParts.assertionType);
+    try {
+      assertionParts.assertionType = convertAssertionType(assertionParts.assertionType);
+      if(assertionParts.assertionType === undefined) {
+        throw error();
+      }
+    } catch(e) {
+      console.error('Error: Invalid assertion type. Must be ==, ===, !== or !===.');
+    }
     return assertionParts;
   });
 };
 
-// console.log(extractTestDetails(test));
+console.log(extractTestDetails(test));
 
 module.exports = {
   extractTestDetails: extractTestDetails
