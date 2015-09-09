@@ -8,14 +8,6 @@ test('utility require function', function (t) {
   t.equal(tempUtils.addRequire('assert', 'assert'), 'var assert = require(\'assert\');' + eol, 'Adds a require statement for node assert library');
 });
 
-// test('Add test data to base tape tempalte function', function (t) {
-
-// });
-
-// test('Add test data to base jasmine template function', function (t) {
-
-// });
-
 test('Assemble test file function', function (t) {
   var tests = 'test(\'sum function\', function (t) {' + eol + '  ' +
               't.plan(2);' + eol +'  ' +
@@ -34,8 +26,7 @@ test('Assemble test file function', function (t) {
 });
 
 test('Prepare data for templating function', function (t) {
-  var testData = tempUtils.prepDataForTemplating('tape', 'test.js', {title: 'Sum Function'},
-    {
+  var testData = tempUtils.prepDataForTemplating('tape', 'test.js', {title: 'Sum Function'}, {
     assertionInput: 'diff(3,2)',
     assertionType: 'equal',
     assertionOutput: '1',
