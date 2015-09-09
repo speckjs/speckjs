@@ -16,11 +16,22 @@ test('utility require function', function (t) {
 
 // });
 
-// test('Assemble test file function', function (t) {
-//   t.plan(1);
-//   // t.equal(tempUtils.prepDataForTemplating(tape, test.js, 'Sum Function', 't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  '));
-//   console.log(tempUtils.prepDataForTemplating(tape, test.js, 'Sum Function', 't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  '));
-// });
+test('Assemble test file function', function (t) {
+  var tests = 'test(\'sum function\', function (t) {' + eol + '  ' +
+              't.plan(2);' + eol +'  ' +
+              't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  ' +
+              't.equal(17, file.sum(8, 9), \'return the sum of both params\');' + eol +
+            ')};';
+  var testFile = tempUtils.assembleTestFile('demo.js', tests, 'tape');
+  var expectedOutput = 'var test = require(\'tape\');' + eol + 'var file = require(\'demo.js\');' + eol + eol +
+                  'test(\'sum function\', function (t) {' + eol + '  ' +
+                  't.plan(2);' + eol +'  ' +
+                  't.equal(13, file.sum(6, 7), \'return the sum of both params\');' + eol + '  ' +
+                  't.equal(17, file.sum(8, 9), \'return the sum of both params\');' + eol +
+                ')};';
+  t.plan(1);
+  t.equal(testFile, expectedOutput, 'Function properly assembles string to be written to spec file');
+});
 
 test('Prepare data for templating function', function (t) {
   var testData = tempUtils.prepDataForTemplating('tape', 'test.js', {title: 'Sum Function'},
@@ -30,7 +41,6 @@ test('Prepare data for templating function', function (t) {
     assertionOutput: '1',
     assertionMessage: 'return the diff of both params'
   });
-  console.log(testData);
   t.plan(7);
   t.equal(testData.specType, 'tape', 'Function properly formats spec type in new object');
   t.equal(testData.specFileSrc, 'test.js', 'Function properly formats spec file source in new object');
