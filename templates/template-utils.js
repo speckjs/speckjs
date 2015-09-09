@@ -1,4 +1,3 @@
-var dot = require('dot');
 var jasmineTemps = require('./jasmine/jasmine-templates.js');
 var tapeTemps = require('./tape/tape-templates.js');
 var R = require('ramda');
@@ -68,7 +67,7 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
   }, '' + eol);
 
   var renderSingleTest = function(test, baseTemp) {
-    var base = dot.template(baseTemp)({
+    var base = baseTemp({
       testTitle: test.testTitle,
       assertions: test.assertions.length
     });
@@ -81,7 +80,7 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = jasmineTemps[assertion.assertionType];
-    return ' ' + ' ' + dot.template(tempToAdd)(assertion) + eol;
+    return tempToAdd(assertion) + eol;
   };
 
   return renderTests(data.tests, baseTemp);

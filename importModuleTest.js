@@ -17,19 +17,19 @@ var result2 = speck.build({
   name: 'demo.js',
   content: testString2
 }, {
-  testFW: 'tape'
+  testFW: 'jasmine'
 });
 
 console.log('TS1:', result1);
 console.log('TS2:', result2);
 
-speck.build({
-  name: 'demo.js',
-  content: testString3
-}, {
-  testFW: 'tape',
-  onBuild: function(res) {
-    console.log('result callback:');
-    console.log(res);
-  }
-});
+// speck.build({
+//   name: 'demo.js',
+//   content: testString3
+// }, {
+//   testFW: 'jasmine',
+//   onBuild: function(res) {
+//     console.log('result callback:');
+//     console.log(res);
+//   }
+// });
