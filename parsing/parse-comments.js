@@ -26,7 +26,7 @@
   ```
 */
 var R = require('ramda');
-var acorn = require('acorn');
+var acorn = require('acorn/dist/acorn_csp.js');
 var acornOptions = {locations: true, onComment: onComment};
 var tests = [];
 
