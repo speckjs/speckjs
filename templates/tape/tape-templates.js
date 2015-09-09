@@ -1,19 +1,53 @@
+var eol = require('os').EOL;
+
+/////////////////////
 // Utility templates
-var tempRequire = 'var {{=it.varName}} = require(\'{{=it.module}}\');';
+/////////////////////
+var tempRequire = function(it) {
+  return 'var ' + (it.varName) + ' = require(\'' + (it.module) + '\');' + eol;
+};
 
+////////////////////////////////////////////////////////////////////////////////////
 // Base template for tests (deliberately missing ending syntax - closed in util fx)
-var baseTemplate = 'test(\'{{=it.testTitle}}\', function(t) { ';
-var planTemplate = 't.plan({{=it.assertions}});';
+////////////////////////////////////////////////////////////////////////////////////
+var baseTemplate = function(it) {
+  return 'test(\'' + (it.testTitle) + '\', function(t) { ' + eol;
+};
 
+var planTemplate = function(it) {
+  return 't.plan(' + (it.assertions) + ');' + eol;
+};
+
+//////////////////////////////////
 // Individual assertion templates
-var equalTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
-var notEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
-var notDeepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
-var deepEqualTemplate = 't.{{=it.assertionType}}({{=it.assertionOutput}}, file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
-var okTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
-var notOkTemplate = 't.{{=it.assertionType}}(file.{{=it.assertionInput}}, \'{{=it.assertionMessage}}\');';
+//////////////////////////////////
+var equalTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
 
+var notEqualTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
+
+var notDeepEqualTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
+
+var deepEqualTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
+
+var okTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
+
+var notOkTemplate = function(it) {
+  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+};
+
+////////////////////
 // Export templates
+////////////////////
 module.exports = {
   require: tempRequire,
   base: baseTemplate,
