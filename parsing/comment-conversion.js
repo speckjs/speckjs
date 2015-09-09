@@ -18,14 +18,18 @@ var extractTestDetails = function(parsedAssertions) {
   //Loop over all assertions and use pattern matching to extract the atomic units
   return parsedAssertions.map(function(assertion) {
     assertionParts = extractValues(assertion, '{assertionInput} {assertionType} {assertionOutput} ({assertionMessage})');
-
     //Convert assertion type from symbol to usable syntax
-    assertionParts.assertionType = convertAssertionType(assertionParts.assertionType);
+    try {
+      assertionParts.assertionType = convertAssertionType(assertionParts.assertionType);
+      if (assertionParts.assertionType === undefined) {
+        throw 'assertion error';
+      }
+    } catch(e) {
+      assertionParts = {error: 'Assertion syntax error, please fix assertion syntax.'};
+    }
     return assertionParts;
   });
 };
-
-// console.log(extractTestDetails(test));
 
 module.exports = {
   extractTestDetails: extractTestDetails
