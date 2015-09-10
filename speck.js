@@ -6,6 +6,7 @@ var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
 var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
 var tempUtils = require('./templates/template-utils.js');
+var R = require('ramda');
 
 var defaultOptions = {
   testFW: 'tape',
@@ -16,7 +17,7 @@ var defaultOptions = {
 //  Returns a string representation of a spec file and optionally invokes a callback on that string if it is provided
 //  in the options hash.
 var build = function build(file, options) {
-  options = options || defaultOptions;
+  options = options ? R.merge(defaultOptions, options) : defaultOptions;
   var output;
   //  Parses the tests from the input file based on SpeckJS syntax.
   var tests = comments.parse(file.content).tests;
