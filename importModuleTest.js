@@ -20,8 +20,8 @@ var result2 = speck.build({
   testFW: 'jasmine'
 });
 
-console.log('TS1:', result1);
-console.log('TS2:', result2);
+console.log(result1);
+console.log(result2);
 
 // speck.build({
 //   name: 'demo.js',

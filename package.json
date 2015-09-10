@@ -1,6 +1,6 @@
 {
   "name": "speckjs",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "tiny comments, great tests",
   "license": "MIT",
   "contributors": [
@@ -28,7 +28,6 @@
     "tape": "^4.2.0"
   },
   "dependencies": {
-    "extract-values": "^0.1.2",
     "acorn": "^2.3.0",
     "ramda": "^0.17.1"
   }
