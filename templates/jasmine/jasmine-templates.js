@@ -24,11 +24,11 @@ var baseTemplate = function(it) {
 
 // Individual assertion templates
 var equalTemplate = function(it) {
-  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'expect(file.' + (it.assertionInput) + '.toBe(' + (it.assertionOutput) + '))' + eol + indent(2) + '});';
+  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'expect(file.' + (it.assertionInput) + '.toBe(' + (it.assertionOutput) + '));' + eol + indent(2) + '});';
 };
 
 var notEqualTemplate = function(it) {
-  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'expect(file.' + (it.assertionInput) + '.not.toBe(' + (it.assertionOutput) + '))' + eol + indent(2) + '});';
+  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'expect(file.' + (it.assertionInput) + '.not.toBe(' + (it.assertionOutput) + '));' + eol + indent(2) + '});';
 };
 
 var deepEqualTemplate = function(it) {
