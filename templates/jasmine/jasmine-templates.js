@@ -32,11 +32,11 @@ var notEqualTemplate = function(it) {
 };
 
 var deepEqualTemplate = function(it) {
-  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'var pass;' + eol + 'try {' + eol + 'pass = true;' + eol + 'assert.deepEqual(file.' + (it.assertionInput) + ', ' + (it.assertionOutput) + ');' + eol + '} catch (e) {' + eol + 'pass = false;' + eol + '}' + eol + 'expect(pass).toBe(true);' + eol + indent(2) + '});' + eol;
+  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'var pass;' + eol + indent(4) +'try {' + eol + indent(6) + 'pass = true;' + eol + indent(6) + 'assert.deepEqual(file.' + (it.assertionInput) + ', ' + (it.assertionOutput) + ');' + eol + indent(4) + '} catch (e) {' + eol + indent(6) + 'pass = false;' + eol + indent(4) + '}' + eol + indent(4) + 'expect(pass).toBe(true);' + eol + indent(2) + '});' + eol;
 };
 
 var notDeepEqualTemplate = function(it) {
-  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'var pass;' + eol + 'try {' + eol + 'pass = true;' + eol + 'assert.notDeepEqual(file.' + (it.assertionInput) + ', ' + (it.assertionOutput) + ');' + eol + '} catch (e) {' + eol + 'pass = false;' + eol + '}' + eol + 'expect(pass).toBe(true);' + eol + indent(2) + '});' + eol;
+  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'var pass;' + eol + indent(4) +'try {' + eol + indent(6) + 'pass = true;' + eol + indent(6) + 'assert.notDeepEqual(file.' + (it.assertionInput) + ', ' + (it.assertionOutput) + ');' + eol + indent(4) + '} catch (e) {' + eol + indent(6) + 'pass = false;' + eol + indent(4) +'}' + eol + indent(4) + 'expect(pass).toBe(true);' + eol + indent(2) + '});' + eol;
 };
 
 module.exports = {
