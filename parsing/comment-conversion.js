@@ -1,4 +1,5 @@
-var extractValues = require('extract-values');
+// var extractValues = require('extract-values');
+var extractValues = require('../templates/template-utils.js').extractValues;
 
 var assertionTypeMap = {
   '==': 'equal',
