@@ -1,10 +1,7 @@
 /*
-  ============================================================
   parse-comments.js
   ============================================================
-  Receive a string/file/blog as input
-  -work with both single line and block comments
-  -test without assertion will still parse, not viceversa ofc.
+  Takes data and outputs raw test objects
   Speckjs formatted comment example:
   ```
   // test > sum function
@@ -43,8 +40,6 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
   var lastTestFound = R.last(tests);
   var newTest;
 
-  // Functional helpers
-  // =================================
   function belongToTest(locLine, test) {
     return (test === undefined) ? false : locLine - 1 === test.loc.endLine;
   }
@@ -77,8 +72,6 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
     return test;
   }
 
-  // Process Single Line Comment
-  // =================================
   if (!isBlock) {
     if (isTest(text)) {
       newTest = R.pipe(extractTest, createEmptyTest)(text);
@@ -88,17 +81,12 @@ function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
     }
   }
 
-  // Process Block-Multi line Comment
-  // =================================
   if (isBlock && isTest(text)) {
     newTest = R.reduce(buildTest, createEmptyTest(), R.split('\n', text));
     tests.push(newTest);
   }
 }
 
-
-// Parsing via acorn and returning an enriched object
-// containing the whole ast and tests array as properties.
 var parse = function(string, options) {
   tests = [];
   options = options || acornOptions;
