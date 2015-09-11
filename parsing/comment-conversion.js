@@ -25,7 +25,7 @@ var extractTestDetails = function(parsedAssertions) {
       if (assertionParts.assertionType === undefined) {
         throw 'assertion error';
       }
-    } catch(e) {
+    } catch (e) {
       assertionParts = {error: 'Assertion syntax error, please fix assertion syntax.'};
     }
     return assertionParts;

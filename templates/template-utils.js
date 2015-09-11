@@ -46,8 +46,8 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = tapeTemps[assertion.assertionType];
-    if (!tempToAdd){
-      return "ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX" + eol;
+    if (!tempToAdd) {
+      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
     }
     return indent + tempToAdd(assertion);
   };
@@ -83,8 +83,8 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
 
   var renderSingleAssertion = function(assertion) {
     var tempToAdd = jasmineTemps[assertion.assertionType];
-    if (!tempToAdd){
-      return "ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX" + eol;
+    if (!tempToAdd) {
+      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
     }
     return tempToAdd(assertion) + eol;
   };
