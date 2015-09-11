@@ -1,7 +1,7 @@
 module.exports = {
 
   // test > sum function
-  // # sum(1,3) == 4 (returnt the sum of both params)
+  // # sum(1,3) 32== 4 (returnt the sum of both params)
   // # sum(10,10) == 20 (return the sum of both params)
   sum: function(a, b) {
     return a + b;
