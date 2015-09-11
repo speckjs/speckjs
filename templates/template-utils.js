@@ -4,12 +4,7 @@ var R = require('ramda');
 var eol = require('os').EOL;
 var indent = ' ' + ' ';
 
-/*
-  Create require statement from given args.
-  input:  (String) variable name assigned with required module.
-  input:  (String) module name you want to require.
-  output: (String) require statement using given arguments.
-*/
+//Create require statement for test files
 exports.addRequire = function(varName, module) {
   return tapeTemps.require({
     varName: varName,
@@ -18,12 +13,8 @@ exports.addRequire = function(varName, module) {
 };
 
 
-/*
-  Function that transforms an object into JavaScript test code.
-  input:  (Object) test data from parsed comments.
-  input:  (String) base-template to build upon with each test and its respective assertions.
-  output: (String) interpolated test block.
-*/
+
+//Transforms object into JS tape test code.  Input -> test data , templates
 exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderTests = R.reduce(function(testsString, test) {
@@ -55,16 +46,8 @@ exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
   return renderTests(data.tests, baseTemp);
 };
 
-/*
-  Function that transforms an object into JavaScript test code.
-  input:  (String) base-template to build upon with each test and its respective assertions.
-  input:  (Object) test data from parsed comments.
-  output: (String) interpolated test block.
-*/
-//A separate utility function for Jasmine, largely the same, but modularized incase there's
-//alot of specific jasmine logic we need to add
+//Transforms object into JS jasmine test code.  Input -> test data, template
 exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
-//Write function similar to tape base template function
   var renderTests = R.reduce(function(testsString, test) {
     return testsString + renderSingleTest(test, baseTemp) + eol;
   }, '' + eol);
@@ -92,14 +75,7 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
   return renderTests(data.tests, baseTemp);
 };
 
-
-/*
-  Creates an object in the format that the templating helper function expects.
-  input:  (String) path to where you want new test file saved.
-  input:  (String) name used to create test file.
-  input:  (String) String ready to be written to file.
-  output: (Object) properly formatted test object ready for templating
-*/
+//Takes data and creates a properly formatted object to use in template functions
 exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDetails) {
   return {
     specType : testFW,
@@ -113,17 +89,8 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
 };
 
 
-/*
-  Assembles String for new test file.
-  input:  (String) name of file being parsed.
-  input:  (Array) strings ready to be added to test file.
-  output: (String) completely filled-out test template.
-*/
-
-//Add a paramter for framework instead of hard coding tape
-//Add logic for requiring assert library for equals/deep equals
+//Assembles individual pieces of the test file together and returns a string
 exports.assembleTestFile = function(fileName, tests, framework) {
-  // Write require statements for testing library and parsed file
   var output = '';
   if (framework === 'jasmine') {
     output += jasmineTemps.assert() + eol;
