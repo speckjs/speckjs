@@ -4,10 +4,8 @@ var speck = require('../speck.js');
 var path = require('path');
 var fs = require('fs');
 
-// TEST FIXTURE
-
 test('tape template function', function (t) {
-    t.plan(6); // How many tests?
+    t.plan(6);
     var testStringNormal = fs.readFileSync(path.join(__dirname, 'testDemoNormal.js'), {encoding: 'utf8'});
     var testStringSingle = fs.readFileSync(path.join(__dirname, 'testDemoSingle.js'), {encoding: 'utf8'});
     var testStringEmpty = fs.readFileSync(path.join(__dirname, 'testDemoEmpty.js'), {encoding: 'utf8'});

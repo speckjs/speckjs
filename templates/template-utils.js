@@ -14,7 +14,7 @@ exports.addRequire = function(varName, module) {
 
 
 
-//Transforms object into JS tape test code.  Input -> test data , templates
+//Transforms object into JS tape test code.  Input is test data and templates
 exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
 
   var renderTests = R.reduce(function(testsString, test) {

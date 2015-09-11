@@ -22,14 +22,3 @@ var result2 = speck.build({
 
 console.log(result1);
 console.log(result2);
-
-// speck.build({
-//   name: 'demo.js',
-//   content: testString3
-// }, {
-//   testFW: 'jasmine',
-//   onBuild: function(res) {
-//     console.log('result callback:');
-//     console.log(res);
-//   }
-// });
