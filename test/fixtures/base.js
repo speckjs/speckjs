@@ -2,7 +2,7 @@ module.exports = {
 
   // test > diff function
   // # diff(3,2) == 1 (returnt the diff of both params)
-  // # diff(8-5) !== 13 (return the diff of both params)
+  // # diff(8,5) !== 13 (return the diff of both params)
   // # diff(10,10) !=== 5 (return the diff of both params)
   diff: function(a, b) {
     return a - b;

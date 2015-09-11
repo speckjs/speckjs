@@ -1,4 +1,4 @@
-var comments = require('../parsing/parse-comments.js');
+var comments = require('../../src/parsing/parse-comments.js');
 var test = require('tape');
 var path = require('path');
 var fs = require('fs');
