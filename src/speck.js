@@ -1,4 +1,4 @@
-// Dependecies
+// Dependencies
 var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
