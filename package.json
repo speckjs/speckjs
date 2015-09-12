@@ -1,6 +1,6 @@
 {
   "name": "speckjs",
-  "version": "0.0.7",
+  "version": "1.0.1",
   "description": "tiny comments, great tests",
   "license": "MIT",
   "contributors": [
@@ -9,7 +9,7 @@
     "Greg Varias <gregvarias@gmail.com>",
     "Nick Balestra <nick@balestra.ch>"
   ],
-  "main": "speck.js",
+  "main": "src/speck.js",
   "scripts": {
     "test": "grunt test"
   },
