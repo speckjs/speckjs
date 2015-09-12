@@ -19,22 +19,22 @@ The first line of a SpeckJS comment is the `title`, describing your test block.
 // test > sum function
 ```
 
-Next, use SpeckJS' domain-specific language (DSL) to create an assertion of what you wish to test. Here's the format of the DSL, followed by an example:
+Next, use SpeckJS' domain-specific language (DSL) to create an assertion of what you wish to test. Here's the format of the DSL:
 ```
-// # fnCall(params) assertion-symbol expectation (assertion description)
-// # sum(1, 2) == 3 (returns the sum of both params)
+// # <actual> <assertion-type> <expected> (<description>)
 ```
 
 You can add as many (or as few) assertions as you'd like.
 ```
+// # sum(1, 2) == 3 (returns the sum of both params)
 // # sum(3, 4) == 7 (returns the sum of both params)
-// # sum(7, 8) !== 10 (returns the sum of both params)
 ```
 
 That's it! Here's a complete SpeckJS comment for the simple sum function:
 ```
 // test > sum function
 // # sum(1, 2) == 3 (returns the sum of both params)
+// # sum(3, 4) == 7 (returns the sum of both params)
 ```
 
 Comments can also be written using block style comments:
@@ -42,10 +42,12 @@ Comments can also be written using block style comments:
 /*
 test > sum function
 # sum(1, 2) == 3 (returns the sum of both params)
+# sum(3, 4) == 7 (returns the sum of both params)
 */
 ```
 
 ### Supported Assertion Types
+These are the assertion types currently supported, and you can extend this list to include others in [`parsing/comment-conversion.js`](https://github.com/speckjs/speckjs/blob/master/parsing/comment-conversion.js).
 ```
 ==   : equal
 ===  : deep equal
@@ -55,22 +57,22 @@ test > sum function
 
 ### Using the API
 Require the module:
-```javascript
+```
 var speck = require('speckjs');
 ```
 
-The API is comprised of a single function, `build`, with the following parameters:
+The API is comprised of a single function, `build(file, options)`:
 
-* file (required)
-    * name
-    * content
-* options
-    * testFW  (framework)
-    * onBuild (callback)
+* file (Object, required)
+    * name (String)
+    * content (String)
+* options (Object, optional)
+    * testFW  (String)
+    * onBuild (Function)
 
 By default, `build` returns a file (String) of all the unit-tests as indicated from the SpeckJS comments in the original file that was loaded. Here are a few examples of how you can use `build`:
 
-```javascript
+```
 // file object to be passed as an argument
 var file = {
   name: 'demo.js',
@@ -99,12 +101,6 @@ var result1 = speck.build(file, option1);
 // Runs callback with new Jasmine test file
 speck.build(file, option2);
 ```
-
-For further illustration, here's what our output looks like after using `build`. First, in Tape:
-![SpeckJS with Tape](http://i.imgur.com/fDs2DT5.gif)
-
-Then, in Jasmine:
-![SpeckJS with Jasmine](http://i.imgur.com/Vy6xo4v.gif)
 
 ## Support
 SpeckJS is also available as a plugin for the following platforms:
