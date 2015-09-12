@@ -1,0 +1,34 @@
+{
+  "name": "speckjs",
+  "version": "0.0.7",
+  "description": "tiny comments, great tests",
+  "license": "MIT",
+  "contributors": [
+    "Luke Savage <luke.savage92@gmail.com>",
+    "Zach Sebag <zsebag@gmail.com>",
+    "Greg Varias <gregvarias@gmail.com>",
+    "Nick Balestra <nick@balestra.ch>"
+  ],
+  "main": "speck.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/speckjs/speckjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/speckjs/speckjs/issues"
+  },
+  "homepage": "https://github.com/speckjs/speckjs#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "gruntify-eslint": "^1.0.1",
+    "tape": "^4.2.0"
+  },
+  "dependencies": {
+    "acorn": "^2.3.0",
+    "ramda": "^0.17.1"
+  }
+}
