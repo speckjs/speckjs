@@ -9,7 +9,7 @@
     "Greg Varias <gregvarias@gmail.com>",
     "Nick Balestra <nick@balestra.ch>"
   ],
-  "main": "speck.js",
+  "main": "src/speck.js",
   "scripts": {
     "test": "grunt test"
   },
