@@ -39,3 +39,13 @@ var deepEqualTemplate = function(it) {
 var notDeepEqualTemplate = function(it) {
   return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'file.' + (it.assertionInput) + '.should.not.deep.equal(' + (it.assertionOutput) + '));' + eol + indent(2) + '});';
 };
+
+module.exports = {
+  require: tempRequire,
+  shouldExecute: shouldExecute,
+  base: baseTemplate,
+  equal: equalTemplate,
+  notEqual: notEqualTemplate,
+  deepEqual: deepEqualTemplate,
+  notDeepEqual: notDeepEqualTemplate
+};
