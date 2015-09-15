@@ -125,10 +125,15 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   if (framework === 'jasmine') {
     output += jasmineTemps.assert() + eol;
   }
-  output += exports.addRequire('test', framework) + exports.addRequire('file', fileName);
   if(framework === 'mocha-chai'){
+    output += exports.addRequire('chai', 'chai');
     output += mochaChaiTemps.shouldExecute();
   }
+  if(framework === 'tape') {
+    output += exports.addRequire('test', framework);
+  }
+  output += exports.addRequire('file', fileName);
+
   return R.reduce(function(testFile, test) {
     return testFile + test;
   }, output, tests);
