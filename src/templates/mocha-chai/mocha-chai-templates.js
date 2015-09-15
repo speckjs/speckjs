@@ -15,7 +15,7 @@ var tempRequire = function(it) {
 
 //Should Execute Statement
 var shouldExecute = function(it) {
-  return 'var should = chai.should()';
+  return 'var should = chai.should();' + eol;
 };
 
 // Base template
