@@ -3,6 +3,7 @@ var comments = require('./parsing/parse-comments.js');
 var extract = require('./parsing/comment-conversion.js');
 var tapeTemps = require('./templates/tape/tape-templates.js');
 var jasmineTemps = require('./templates/jasmine/jasmine-templates.js');
+var mochaChaiTemps = require('./templates/mocha-chai/mocha-chai-templates.js');
 var tempUtils = require('./templates/template-utils.js');
 var R = require('ramda');
 
@@ -32,6 +33,9 @@ var build = function build(file, options) {
     }
     if (options.testFW === 'tape') {
       jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base, tapeTemps.plan);
+    }
+     if (options.testFW === 'mocha-chai') {
+      jsTestString = tempUtils.addTestDataToBaseTemplateMochaChai(utilData, mochaChaiTemps.base);
     }
     return jsTestString;
   });

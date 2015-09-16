@@ -1,5 +1,6 @@
 var jasmineTemps = require('./jasmine/jasmine-templates.js');
 var tapeTemps = require('./tape/tape-templates.js');
+var mochaChaiTemps = require('./mocha-chai/mocha-chai-templates.js');
 var R = require('ramda');
 var eol = require('os').EOL;
 var indent = ' ' + ' ';
@@ -11,7 +12,6 @@ exports.addRequire = function(varName, module) {
     module: module
   });
 };
-
 
 
 //Transforms object into JS tape test code.  Input is test data and templates
@@ -75,6 +75,36 @@ exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
   return renderTests(data.tests, baseTemp);
 };
 
+//Transforms object into JS mocha chai test code.  Input -> test data, template
+exports.addTestDataToBaseTemplateMochaChai = function(data, baseTemp) {
+  var renderTests = R.reduce(function(testsString, test) {
+    return testsString + renderSingleTest(test, baseTemp) + eol;
+  }, '' + eol);
+
+  var renderSingleTest = function(test, baseTemp) {
+    var base = baseTemp({
+      testTitle: test.testTitle,
+      assertions: test.assertions.length
+    });
+    return base + eol + renderAssertions(test.assertions) + '});';
+  };
+
+  var renderAssertions = R.reduce(function(assertionsString, assertion) {
+    return assertionsString + renderSingleAssertion(assertion);
+  }, '');
+
+  var renderSingleAssertion = function(assertion) {
+    var tempToAdd = mochaChaiTemps[assertion.assertionType];
+    if (!tempToAdd) {
+      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
+    }
+    return tempToAdd(assertion) + eol;
+  };
+
+  return renderTests(data.tests, baseTemp);
+};
+
+
 //Takes data and creates a properly formatted object to use in template functions
 exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDetails) {
   return {
@@ -95,7 +125,14 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   if (framework === 'jasmine') {
     output += jasmineTemps.assert() + eol;
   }
-  output += exports.addRequire('test', framework) + exports.addRequire('file', fileName);
+  if(framework === 'mocha-chai'){
+    output += exports.addRequire('chai', 'chai');
+    output += mochaChaiTemps.shouldExecute();
+  }
+  if(framework === 'tape') {
+    output += exports.addRequire('test', framework);
+  }
+  output += exports.addRequire('file', fileName);
 
   return R.reduce(function(testFile, test) {
     return testFile + test;

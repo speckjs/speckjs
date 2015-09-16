@@ -1,4 +1,4 @@
-var speck = require('./speck.js');
+var speck = require('../src/speck.js');
 var fs = require('fs');
 var path = require('path');
 
@@ -10,15 +10,23 @@ var result1 = speck.build({
   name: 'base.js',
   content: testString1
 }, {
-  testFW: 'tape'
+  testFW: 'jasmine'
 });
 
 var result2 = speck.build({
   name: 'base.js',
   content: testString2
 }, {
-  testFW: 'jasmine'
+  testFW: 'mocha-chai'
+});
+
+var result3 = speck.build({
+  name: 'base.js',
+  content: testString3
+}, {
+  testFW: 'tape'
 });
 
 console.log(result1);
 console.log(result2);
+console.log(result3);
