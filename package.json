@@ -1,7 +1,7 @@
 {
   "name": "speckjs",
-  "version": "1.0.1",
-  "description": "tiny comments, great tests",
+  "version": "1.1.0",
+  "description": "Comment Driven Development",
   "license": "MIT",
   "contributors": [
     "Luke Savage <luke.savage92@gmail.com>",
