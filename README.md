@@ -49,7 +49,7 @@ test > sum function
 ```
 
 ### Supported Assertion Types
-These are the assertion types currently supported, and you can extend this list to include others in [`parsing/comment-conversion.js`](https://github.com/speckjs/speckjs/blob/master/parsing/comment-conversion.js).
+These are the assertion types currently supported, and you can extend this list to include others in [`parsing/comment-conversion.js`](https://github.com/speckjs/speckjs/blob/master/src/parsing/comment-conversion.js).
 ```
 ==   : equal
 ===  : deep equal
