@@ -10,7 +10,9 @@ var R = require('ramda');
 //Default options for build function
 var defaultOptions = {
   testFW: 'tape',
-  onBuild: null
+  onBuild: null,
+  tRegex: /test\s*>\s*(.*)/i,
+  aRegex: /#\s*(.*)/i
 };
 
 //Takes a file object with SpeckJS-formatted comments as input. Returns a string
@@ -18,6 +20,7 @@ var defaultOptions = {
 var build = function build(file, options) {
   options = options ? R.merge(defaultOptions, options) : defaultOptions;
   var output;
+  comments.setRegex(options.tRegex, options.aRegex);
   var tests = comments.parse(file.content).tests;
   var testsReadyToAssemble = tests.map(function(test) {
     var testDetails;
