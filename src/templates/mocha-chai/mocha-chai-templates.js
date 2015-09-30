@@ -40,6 +40,17 @@ var notDeepEqualTemplate = function(it) {
   return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'file.' + (it.assertionInput) + '.should.not.deep.equal(' + (it.assertionOutput) + '));' + eol + indent(2) + '});';
 };
 
+var greaterThanTemplate = function(it) {
+  return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'file.' + (it.assertionInput) + '.should.be.above(' + (it.assertionOutput) + ');' + eol + indent(2) + '});';
+};
+
+function generateTemplateFor(assertion) {
+  var propertyTemplate = function(it) {
+    return indent(2) + 'it(\'' + (it.assertionMessage) + '\', function() {' + eol + indent(4) + 'file.' + (it.assertionInput) + '.should.'+assertion+'(' + (it.assertionOutput) + ');' + eol + indent(2) + '});';
+  };
+  return propertyTemplate;
+}
+
 module.exports = {
   require: tempRequire,
   shouldExecute: shouldExecute,
@@ -47,5 +58,16 @@ module.exports = {
   equal: equalTemplate,
   notEqual: notEqualTemplate,
   deepEqual: deepEqualTemplate,
-  notDeepEqual: notDeepEqualTemplate
+  notDeepEqual: notDeepEqualTemplate,
+  greaterThan: greaterThanTemplate
 };
+
+// 
+// # Generate additional templates
+// 
+var templates = {"hasProperty":"have.property"}
+
+for (var template in templates) {
+  var template_assertion = templates[template];
+  module.exports[template] = generateTemplateFor(template_assertion);
+}
