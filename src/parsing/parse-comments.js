@@ -27,12 +27,14 @@ var acorn = require('acorn/dist/acorn_csp.js');
 var acornOptions = {locations: true, onComment: onComment};
 var tests = [];
 
+var tRegex;
+var aRegex;
 
 // Sanitizing iterator to run on each comment found during parsing
 function onComment(isBlock, text, _s, _e, sLoc, eLoc) {
 
-  var tRegex = /test\s*>\s*(.*)/i;
-  var aRegex = /#\s*(.*)/i;
+  
+  
   var isTest = R.test(tRegex);
   var extractTest = R.pipe(R.match(tRegex), R.last(), R.trim());
   var isAssertion = R.test(aRegex);
@@ -96,8 +98,17 @@ var parse = function(string, options) {
   return output;
 };
 
+// 
+// # setRegex - Allows us to overwrite the default regex to pick tests from comments
+// 
+var setRegex = function(titleRegex, assertionRegex) {
+    tRegex = titleRegex;
+    aRegex =  assertionRegex;
+}
+
 
 // Public parsing API
 module.exports = {
-  parse: parse
+  parse: parse,
+  setRegex: setRegex
 };
