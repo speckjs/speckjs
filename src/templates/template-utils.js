@@ -6,7 +6,7 @@ var R = require('ramda');
 var eol = require('os').EOL;
 var indent = ' ' + ' ';
 
-// Takes data and creates a properly formatted object to use in template functions
+// Takes data and creates a properly formatted object for use in template functions
 exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDetails) {
   return {
     specType : testFW,
@@ -38,6 +38,7 @@ exports.prepareTestsForAssembly = function(tests, file, options) {
 exports.assembleTestFile = function(fileName, tests, framework) {
   var output = '';
 
+  // Adds necessary require statements
   if (framework === 'jasmine') {
     output += jasmineTemps.assert() + eol;
   }
@@ -48,9 +49,9 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   if(framework === 'tape') {
     output += exports.addRequire('test', framework);
   }
-
   output += exports.addRequire('file', fileName);
 
+  // Adds each test to the file, then returns file
   return R.reduce(function(testFile, test) {
     return testFile + test;
   }, output, tests);
@@ -87,9 +88,9 @@ var _addTestDataToTemplate = function(data, fw) {
   return _renderTests(data.tests);
 };
 
-////////////////
-// render tests
-////////////////
+/////////////////////////////////////////////////////////////
+// render tests * NOTE: a test is comprised of 1+ assertions
+/////////////////////////////////////////////////////////////
 var _renderTests = R.reduce(function(testsString, test) {
   var currentType = _getCurrentSpecType();
   if (currentType === 'tape') {
@@ -130,7 +131,7 @@ var _renderSingleAssertion = function(assertion) {
     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
   }
 
-  return indent + tempToAdd(assertion);
+  return indent + tempToAdd(assertion) + eol;
 };
 
 ////////////
