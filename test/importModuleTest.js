@@ -24,7 +24,10 @@ var result3 = speck.build({
   name: 'base.js',
   content: testString3
 }, {
-  testFW: 'tape'
+  testFW: 'tape',
+  onBuild: function(data) {
+    console.log('Applying a callback:\n', data);
+  }
 });
 
 console.log(result1);

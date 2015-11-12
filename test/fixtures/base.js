@@ -8,7 +8,7 @@ module.exports = {
     return a - b;
   },
 
-  // test > product function
+  // test > quotient function
   // # quotient(6,3) == 2 (returns the quotient of both params)
   // # quotient(10,10) !== 9 (returns the quotient of both params)
   // # quotient(25,5) !=== 10 (returns the quotient of both params)
