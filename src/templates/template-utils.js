@@ -14,32 +14,13 @@ exports.addRequire = function(varName, module) {
   });
 };
 
+// Transforms data into specs for desired framework. Input -> test data, templates
+exports.addTestDataToBaseTemplate = function(data, fw) {
+  _renderTests.fw = fw;
+  return _renderTests(data.tests);
+}
 
-// Transforms data into Tape specs. Input -> test data, templates
-exports.addTestDataToBaseTemplateTape = function(data, baseTemp, planTemp) {
-  var renderTapeTests = R.reduce(function(testsString, test) {
-    return testsString + _renderSingleTapeTest(test, baseTemp, planTemp);
-  }, '');
-
-  return _renderTapeTests(data.tests, baseTemp);
-};
-
-
-// Transforms data into Jasmine specs. Input -> test data, template
-exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
-  _renderTests.fw = "jasmine";
-  return _renderTests(data.tests, baseTemp);
-};
-
-
-// Transforms data into Mocha/Chai specs. Input -> test data, template
-exports.addTestDataToBaseTemplateMochaChai = function(data, baseTemp) {
-  _renderTests.fw = "mocha-chai";
-  return _renderTests(data.tests, baseTemp);
-};
-
-
-//Takes data and creates a properly formatted object to use in template functions
+// Takes data and creates a properly formatted object to use in template functions
 exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDetails) {
   return {
     specType : testFW,
@@ -52,8 +33,7 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   };
 };
 
-
-//Assembles individual pieces of the test file together and returns a string
+// Assembles individual pieces of the test file together and returns a string
 exports.assembleTestFile = function(fileName, tests, framework) {
   var output = '';
   if (framework === 'jasmine') {
@@ -72,7 +52,6 @@ exports.assembleTestFile = function(fileName, tests, framework) {
     return testFile + test;
   }, output, tests);
 };
-
 
 // Taken from npm package 'extract-values', but their method of
 // exporting to 'window' does not work with our Atom package.
@@ -126,11 +105,29 @@ exports.extractValues = function(str, pattern, options) {
 ///////////////////
 // PRIVATE HELPERS
 ///////////////////
+var _renderTests = R.reduce(function(testsString, test) {
+  if (_renderTests.fw === 'tape') {
+    return testsString + _renderSingleTapeTest(test, tapeTemps.base, tapeTemps.plan);
+  }
+  var baseTemp = _renderTests.fw === 'jasmine' ? jasmineTemps.base : mochaChaiTemps.base;
+  return testsString + _renderSingleTest(test, baseTemp) + eol;
+}, '' + eol);
+
+var _renderSingleTest = function(test, baseTemp) {
+  var base = baseTemp({
+    testTitle: test.testTitle,
+    assertions: test.assertions.length
+  });
+  return base + eol + _renderAssertions(test.assertions) + '});';
+};
+
 var _renderAssertions = R.reduce(function(assertionsString, assertion) {
   return assertionsString + _renderSingleAssertion(assertion);
 }, '');
 
 var _renderSingleAssertion = function(assertion) {
+
+  // ** NEED TO DYNAMICALLY SELECT TEMPLATE HERE! **
   var tempToAdd = tapeTemps[assertion.assertionType];
   if (!tempToAdd) {
     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
@@ -142,10 +139,6 @@ var _renderSingleAssertion = function(assertion) {
 // for Tape
 ////////////
 // Tape's use of 'plan' requires slightly different template building
-var _renderTapeTests = R.reduce(function(testsString, test) {
-  return testsString + _renderSingleTapeTest(test, tapeTemps.base, tapeTemps.plan);
-}, '');
-
 var _renderSingleTapeTest = function(test, baseTemp, planTemp) {
   var base = baseTemp({
     testTitle: test.testTitle
@@ -153,21 +146,5 @@ var _renderSingleTapeTest = function(test, baseTemp, planTemp) {
   var plan = planTemp({
     assertions: test.assertions.length
   });
-  return eol + base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;
-};
-
-/////////////////////////////
-// for Jasmine and Mocha-Chai
-/////////////////////////////
-var _renderTests = R.reduce(function(testsString, test) {
-  var baseTemp = _renderTests.fw === 'jasmine' ? jasmineTemps.base : mochaChaiTemps.base;
-  return testsString + _renderSingleTest(test, baseTemp) + eol;
-}, '' + eol);
-
-var _renderSingleTest = function(test, baseTemp) {
-  var base = baseTemp({
-    testTitle: test.testTitle,
-    assertions: test.assertions.length
-  });
-  return base + eol + _renderAssertions(test.assertions) + '});';
+  return base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;
 };

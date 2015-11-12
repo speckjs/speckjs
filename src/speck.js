@@ -30,19 +30,8 @@ var build = function build(file, options) {
     }
 
     var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
-    var jsTestString;
 
-    if (options.testFW === 'jasmine') {
-      jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
-    }
-    if (options.testFW === 'tape') {
-      jsTestString = tempUtils.addTestDataToBaseTemplateTape(utilData, tapeTemps.base, tapeTemps.plan);
-    }
-    if (options.testFW === 'mocha-chai') {
-      jsTestString = tempUtils.addTestDataToBaseTemplateMochaChai(utilData, mochaChaiTemps.base);
-    }
-
-    return jsTestString;
+    return tempUtils.addTestDataToBaseTemplate(utilData, options.testFW);
   });
 
   output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
