@@ -1,24 +1,10 @@
 var jasmineTemps = require('./jasmine/jasmine-templates.js');
 var tapeTemps = require('./tape/tape-templates.js');
 var mochaChaiTemps = require('./mocha-chai/mocha-chai-templates.js');
+var extract = require('../parsing/comment-conversion.js');
 var R = require('ramda');
 var eol = require('os').EOL;
 var indent = ' ' + ' ';
-
-// Create require statement for test files
-// * tapeTemps require statement also valid for Jasmine/Mocha-Chai *
-exports.addRequire = function(varName, module) {
-  return tapeTemps.require({
-    varName: varName,
-    module: module
-  });
-};
-
-// Transforms data into specs for desired framework
-exports.addTestDataToTemplate = function(data, fw) {
-  _setCurrentSpecType(fw);
-  return _renderTests(data.tests);
-}
 
 // Takes data and creates a properly formatted object to use in template functions
 exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDetails) {
@@ -33,9 +19,25 @@ exports.prepDataForTemplating = function(testFW, fileName, currentTest, testDeta
   };
 };
 
+// Takes a collection of parsed SpeckJS comments and returns a collection of individual tests
+exports.prepareTestsForAssembly = function(tests, file, options) {
+  return tests.map(function(test) {
+    var testDetails;
+    if (test.assertions.length) {
+      testDetails = extract.extractTestDetails(test.assertions);
+    } else {
+      testDetails = '';
+    }
+
+    var utilData = exports.prepDataForTemplating(options.testFW, file.name, test, testDetails);
+    return _addTestDataToTemplate(utilData, options.testFW);
+  });
+};
+
 // Assembles individual pieces of the test file together and returns a string
 exports.assembleTestFile = function(fileName, tests, framework) {
   var output = '';
+
   if (framework === 'jasmine') {
     output += jasmineTemps.assert() + eol;
   }
@@ -46,6 +48,7 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   if(framework === 'tape') {
     output += exports.addRequire('test', framework);
   }
+
   output += exports.addRequire('file', fileName);
 
   return R.reduce(function(testFile, test) {
@@ -53,52 +56,13 @@ exports.assembleTestFile = function(fileName, tests, framework) {
   }, output, tests);
 };
 
-// Taken from npm package 'extract-values', but their method of
-// exporting to 'window' does not work with our Atom package.
-// Per their docs: "This is a simple helper to extract values from a string based on a pattern."
-exports.extractValues = function(str, pattern, options) {
-  options = options || {};
-  var delimiters = options.delimiters || ['{', '}'];
-  var lowercase = options.lowercase;
-  var whitespace = options.whitespace;
-
-  var special_chars_regex = /[\\\^\$\*\+\.\?\(\)]/g;
-  var token_regex = new RegExp(delimiters[0] + '([^' + delimiters.join('') + '\t\r\n]+)' + delimiters[1], 'g');
-  var tokens = pattern.match(token_regex);
-  var pattern_regex = new RegExp(pattern.replace(special_chars_regex, '\\$&').replace(token_regex, '(\.+)'));
-
-  if (lowercase) {
-    str = str.toLowerCase();
-  }
-
-  if (whitespace) {
-    str = str.replace(/\s+/g, function(match) {
-      var whitespace_str = '';
-      for (var i = 0; i < whitespace; i++) {
-        whitespace_str = whitespace_str + match.charAt(0);
-      }
-      return whitespace_str;
-    });
-  }
-
-  var matches = str.match(pattern_regex);
-
-  if (!matches) {
-    return null;
-  }
-
-  // Allow exact string matches to return an empty object instead of null
-  if (!tokens) {
-    return (str === pattern) ? {} : null;
-  }
-
-  matches = matches.splice(1);
-  var output = {};
-  for (var i=0; i < tokens.length; i++) {
-    output[tokens[i].replace(new RegExp(delimiters[0] + '|' + delimiters[1], 'g'), '')] = matches[i];
-  }
-
-  return output;
+// Create require statement for test files
+// * tapeTemps require statement also valid for Jasmine/Mocha-Chai *
+exports.addRequire = function(varName, module) {
+  return tapeTemps.require({
+    varName: varName,
+    module: module
+  });
 };
 
 
@@ -107,13 +71,21 @@ exports.extractValues = function(str, pattern, options) {
 ///////////////////
 var _currentSpecType;
 
+// Set value for the current type of spec being built
 var _setCurrentSpecType = function(fw) {
   _currentSpecType = fw;
 }
 
+// Get value for the current type of spec being built
 var _getCurrentSpecType = function() {
   return _currentSpecType
 }
+
+// Transforms data into usable specs for desired framework
+var _addTestDataToTemplate = function(data, fw) {
+  _setCurrentSpecType(fw);
+  return _renderTests(data.tests);
+};
 
 ////////////////
 // render tests
