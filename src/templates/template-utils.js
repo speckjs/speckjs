@@ -14,9 +14,9 @@ exports.addRequire = function(varName, module) {
   });
 };
 
-// Transforms data into specs for desired framework. Input -> test data, templates
-exports.addTestDataToBaseTemplate = function(data, fw) {
-  _renderTests.fw = fw;
+// Transforms data into specs for desired framework
+exports.addTestDataToTemplate = function(data, fw) {
+  _setCurrentSpecType(fw);
   return _renderTests(data.tests);
 }
 
@@ -105,11 +105,25 @@ exports.extractValues = function(str, pattern, options) {
 ///////////////////
 // PRIVATE HELPERS
 ///////////////////
+var _currentSpecType;
+
+var _setCurrentSpecType = function(fw) {
+  _currentSpecType = fw;
+}
+
+var _getCurrentSpecType = function() {
+  return _currentSpecType
+}
+
+////////////////
+// render tests
+////////////////
 var _renderTests = R.reduce(function(testsString, test) {
-  if (_renderTests.fw === 'tape') {
-    return testsString + _renderSingleTapeTest(test, tapeTemps.base, tapeTemps.plan);
+  var currentType = _getCurrentSpecType();
+  if (currentType === 'tape') {
+    return testsString + _renderSingleTapeTest(test);
   }
-  var baseTemp = _renderTests.fw === 'jasmine' ? jasmineTemps.base : mochaChaiTemps.base;
+  var baseTemp = currentType === 'jasmine' ? jasmineTemps.base : mochaChaiTemps.base;
   return testsString + _renderSingleTest(test, baseTemp) + eol;
 }, '' + eol);
 
@@ -121,17 +135,29 @@ var _renderSingleTest = function(test, baseTemp) {
   return base + eol + _renderAssertions(test.assertions) + '});';
 };
 
+/////////////////////
+// render assertions
+/////////////////////
 var _renderAssertions = R.reduce(function(assertionsString, assertion) {
   return assertionsString + _renderSingleAssertion(assertion);
 }, '');
 
 var _renderSingleAssertion = function(assertion) {
+  var tempToAdd;
+  var currentType = _getCurrentSpecType();
 
-  // ** NEED TO DYNAMICALLY SELECT TEMPLATE HERE! **
-  var tempToAdd = tapeTemps[assertion.assertionType];
+  if (currentType === 'tape') {
+    tempToAdd = tapeTemps[assertion.assertionType];
+  } else if (currentType === 'jasmine') {
+    tempToAdd = jasmineTemps[assertion.assertionType];
+  } else if (currentType === 'mocha-chai') {
+    tempToAdd = mochaChaiTemps[assertion.assertionType];
+  }
+
   if (!tempToAdd) {
     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
   }
+
   return indent + tempToAdd(assertion);
 };
 
@@ -139,11 +165,11 @@ var _renderSingleAssertion = function(assertion) {
 // for Tape
 ////////////
 // Tape's use of 'plan' requires slightly different template building
-var _renderSingleTapeTest = function(test, baseTemp, planTemp) {
-  var base = baseTemp({
+var _renderSingleTapeTest = function(test) {
+  var base = tapeTemps.base({
     testTitle: test.testTitle
   });
-  var plan = planTemp({
+  var plan = tapeTemps.plan({
     assertions: test.assertions.length
   });
   return base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;

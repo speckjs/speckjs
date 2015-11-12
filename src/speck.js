@@ -31,7 +31,7 @@ var build = function build(file, options) {
 
     var utilData = tempUtils.prepDataForTemplating(options.testFW, file.name, test, testDetails);
 
-    return tempUtils.addTestDataToBaseTemplate(utilData, options.testFW);
+    return tempUtils.addTestDataToTemplate(utilData, options.testFW);
   });
 
   output = tempUtils.assembleTestFile(file.name, testsReadyToAssemble, options.testFW);
