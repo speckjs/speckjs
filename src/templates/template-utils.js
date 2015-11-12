@@ -5,7 +5,8 @@ var R = require('ramda');
 var eol = require('os').EOL;
 var indent = ' ' + ' ';
 
-//Create require statement for test files
+// Create require statement for test files
+// * tapeTemps require statement also valid for Jasmine/Mocha-Chai *
 exports.addRequire = function(varName, module) {
   return tapeTemps.require({
     varName: varName,
@@ -14,92 +15,93 @@ exports.addRequire = function(varName, module) {
 };
 
 
-//Transforms object into JS tape test code.  Input is test data and templates
-exports.addTestDataToBaseTemplate = function(data, baseTemp, planTemp) {
-
-  var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp, planTemp);
+// Transforms data into Tape specs. Input -> test data, templates
+exports.addTestDataToBaseTemplateTape = function(data, baseTemp, planTemp) {
+  var renderTapeTests = R.reduce(function(testsString, test) {
+    return testsString + _renderSingleTapeTest(test, baseTemp, planTemp);
   }, '');
 
-  var renderSingleTest = function(test, baseTemp, planTemp) {
-    var base = baseTemp({
-      testTitle: test.testTitle
-    });
-    var plan = planTemp({
-      assertions: test.assertions.length
-    });
-    return eol + base + indent + plan + renderAssertions(test.assertions) + '});' + eol;
-  };
+  // var renderSingleTapeTest = function(test, baseTemp, planTemp) {
+  //   var base = baseTemp({
+  //     testTitle: test.testTitle
+  //   });
+  //   var plan = planTemp({
+  //     assertions: test.assertions.length
+  //   });
+  //   return eol + base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;
+  // };
 
-  var renderAssertions = R.reduce(function(assertionsString, assertion) {
-    return assertionsString + renderSingleAssertion(assertion);
-  }, '');
+  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
+  //   return assertionsString + renderSingleAssertion(assertion);
+  // }, '');
 
-  var renderSingleAssertion = function(assertion) {
-    var tempToAdd = tapeTemps[assertion.assertionType];
-    if (!tempToAdd) {
-      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-    }
-    return indent + tempToAdd(assertion);
-  };
+  // var renderSingleAssertion = function(assertion) {
+  //   var tempToAdd = tapeTemps[assertion.assertionType];
+  //   if (!tempToAdd) {
+  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
+  //   }
+  //   return indent + tempToAdd(assertion);
+  // };
 
-  return renderTests(data.tests, baseTemp);
+  return _renderTapeTests(data.tests, baseTemp);
 };
 
-//Transforms object into JS jasmine test code.  Input -> test data, template
+
+// Transforms data into Jasmine specs. Input -> test data, template
 exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
   var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp) + eol;
+    return testsString + _renderSingleTest(test, baseTemp) + eol;
   }, '' + eol);
 
-  var renderSingleTest = function(test, baseTemp) {
-    var base = baseTemp({
-      testTitle: test.testTitle,
-      assertions: test.assertions.length
-    });
-    return base + eol + renderAssertions(test.assertions) + '});';
-  };
+  // var renderSingleTest = function(test, baseTemp) {
+  //   var base = baseTemp({
+  //     testTitle: test.testTitle,
+  //     assertions: test.assertions.length
+  //   });
+  //   return base + eol + renderAssertions(test.assertions) + '});';
+  // };
 
-  var renderAssertions = R.reduce(function(assertionsString, assertion) {
-    return assertionsString + renderSingleAssertion(assertion);
-  }, '');
+  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
+  //   return assertionsString + renderSingleAssertion(assertion);
+  // }, '');
 
-  var renderSingleAssertion = function(assertion) {
-    var tempToAdd = jasmineTemps[assertion.assertionType];
-    if (!tempToAdd) {
-      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-    }
-    return tempToAdd(assertion) + eol;
-  };
+  // var renderSingleAssertion = function(assertion) {
+  //   var tempToAdd = jasmineTemps[assertion.assertionType];
+  //   if (!tempToAdd) {
+  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
+  //   }
+  //   return tempToAdd(assertion) + eol;
+  // };
 
   return renderTests(data.tests, baseTemp);
 };
 
-//Transforms object into JS mocha chai test code.  Input -> test data, template
+
+// Transforms data into Mocha/Chai specs. Input -> test data, template
 exports.addTestDataToBaseTemplateMochaChai = function(data, baseTemp) {
   var renderTests = R.reduce(function(testsString, test) {
-    return testsString + renderSingleTest(test, baseTemp) + eol;
+    return testsString + _renderSingleTest(test, baseTemp) + eol;
   }, '' + eol);
 
-  var renderSingleTest = function(test, baseTemp) {
-    var base = baseTemp({
-      testTitle: test.testTitle,
-      assertions: test.assertions.length
-    });
-    return base + eol + renderAssertions(test.assertions) + '});';
-  };
+  // var renderSingleTest = function(test, baseTemp) {
+  //   var base = baseTemp({
+  //     testTitle: test.testTitle,
+  //     assertions: test.assertions.length
+  //   });
+  //   return base + eol + renderAssertions(test.assertions) + '});';
+  // };
 
-  var renderAssertions = R.reduce(function(assertionsString, assertion) {
-    return assertionsString + renderSingleAssertion(assertion);
-  }, '');
+  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
+  //   return assertionsString + renderSingleAssertion(assertion);
+  // }, '');
 
-  var renderSingleAssertion = function(assertion) {
-    var tempToAdd = mochaChaiTemps[assertion.assertionType];
-    if (!tempToAdd) {
-      return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-    }
-    return tempToAdd(assertion) + eol;
-  };
+  // var renderSingleAssertion = function(assertion) {
+  //   var tempToAdd = mochaChaiTemps[assertion.assertionType];
+  //   if (!tempToAdd) {
+  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
+  //   }
+  //   return tempToAdd(assertion) + eol;
+  // };
 
   return renderTests(data.tests, baseTemp);
 };
@@ -187,3 +189,49 @@ exports.extractValues = function(str, pattern, options) {
 
   return output;
 };
+
+
+///////////////////
+// PRIVATE HELPERS
+///////////////////
+var _renderAssertions = R.reduce(function(assertionsString, assertion) {
+  return assertionsString + _renderSingleAssertion(assertion);
+}, '');
+
+var _renderSingleAssertion = function(assertion) {
+  var tempToAdd = tapeTemps[assertion.assertionType];
+  if (!tempToAdd) {
+    return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
+  }
+  return indent + tempToAdd(assertion);
+};
+
+////////////
+// for Tape
+////////////
+var _renderTapeTests = R.reduce(function(testsString, test) {
+  return testsString + _renderSingleTapeTest(test, tapeTemps.base, tapeTemps.plan);
+}, '');
+
+var _renderSingleTapeTest = function(test, baseTemp, planTemp) {
+  var base = baseTemp({
+    testTitle: test.testTitle
+  });
+  var plan = planTemp({
+    assertions: test.assertions.length
+  });
+  return eol + base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;
+};
+
+/////////////////////////////
+// for Jasmine or Mocha-Chai
+/////////////////////////////
+var _renderSingleTest = function(test, baseTemp) {
+  var base = baseTemp({
+    testTitle: test.testTitle,
+    assertions: test.assertions.length
+  });
+  return base + eol + _renderAssertions(test.assertions) + '});';
+};
+
+

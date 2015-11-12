@@ -36,7 +36,7 @@ var build = function build(file, options) {
       jsTestString = tempUtils.addTestDataToBaseTemplateJasmine(utilData, jasmineTemps.base);
     }
     if (options.testFW === 'tape') {
-      jsTestString = tempUtils.addTestDataToBaseTemplate(utilData, tapeTemps.base, tapeTemps.plan);
+      jsTestString = tempUtils.addTestDataToBaseTemplateTape(utilData, tapeTemps.base, tapeTemps.plan);
     }
     if (options.testFW === 'mocha-chai') {
       jsTestString = tempUtils.addTestDataToBaseTemplateMochaChai(utilData, mochaChaiTemps.base);
