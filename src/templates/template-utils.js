@@ -21,89 +21,21 @@ exports.addTestDataToBaseTemplateTape = function(data, baseTemp, planTemp) {
     return testsString + _renderSingleTapeTest(test, baseTemp, planTemp);
   }, '');
 
-  // var renderSingleTapeTest = function(test, baseTemp, planTemp) {
-  //   var base = baseTemp({
-  //     testTitle: test.testTitle
-  //   });
-  //   var plan = planTemp({
-  //     assertions: test.assertions.length
-  //   });
-  //   return eol + base + indent + plan + _renderAssertions(test.assertions) + '});' + eol;
-  // };
-
-  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
-  //   return assertionsString + renderSingleAssertion(assertion);
-  // }, '');
-
-  // var renderSingleAssertion = function(assertion) {
-  //   var tempToAdd = tapeTemps[assertion.assertionType];
-  //   if (!tempToAdd) {
-  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-  //   }
-  //   return indent + tempToAdd(assertion);
-  // };
-
   return _renderTapeTests(data.tests, baseTemp);
 };
 
 
 // Transforms data into Jasmine specs. Input -> test data, template
 exports.addTestDataToBaseTemplateJasmine = function(data, baseTemp) {
-  var renderTests = R.reduce(function(testsString, test) {
-    return testsString + _renderSingleTest(test, baseTemp) + eol;
-  }, '' + eol);
-
-  // var renderSingleTest = function(test, baseTemp) {
-  //   var base = baseTemp({
-  //     testTitle: test.testTitle,
-  //     assertions: test.assertions.length
-  //   });
-  //   return base + eol + renderAssertions(test.assertions) + '});';
-  // };
-
-  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
-  //   return assertionsString + renderSingleAssertion(assertion);
-  // }, '');
-
-  // var renderSingleAssertion = function(assertion) {
-  //   var tempToAdd = jasmineTemps[assertion.assertionType];
-  //   if (!tempToAdd) {
-  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-  //   }
-  //   return tempToAdd(assertion) + eol;
-  // };
-
-  return renderTests(data.tests, baseTemp);
+  _renderTests.fw = "jasmine";
+  return _renderTests(data.tests, baseTemp);
 };
 
 
 // Transforms data into Mocha/Chai specs. Input -> test data, template
 exports.addTestDataToBaseTemplateMochaChai = function(data, baseTemp) {
-  var renderTests = R.reduce(function(testsString, test) {
-    return testsString + _renderSingleTest(test, baseTemp) + eol;
-  }, '' + eol);
-
-  // var renderSingleTest = function(test, baseTemp) {
-  //   var base = baseTemp({
-  //     testTitle: test.testTitle,
-  //     assertions: test.assertions.length
-  //   });
-  //   return base + eol + renderAssertions(test.assertions) + '});';
-  // };
-
-  // var renderAssertions = R.reduce(function(assertionsString, assertion) {
-  //   return assertionsString + renderSingleAssertion(assertion);
-  // }, '');
-
-  // var renderSingleAssertion = function(assertion) {
-  //   var tempToAdd = mochaChaiTemps[assertion.assertionType];
-  //   if (!tempToAdd) {
-  //     return indent + 'ERROR: PLEASE CHECK YOUR ASSERTION SYNTAX' + eol;
-  //   }
-  //   return tempToAdd(assertion) + eol;
-  // };
-
-  return renderTests(data.tests, baseTemp);
+  _renderTests.fw = "mocha-chai";
+  return _renderTests(data.tests, baseTemp);
 };
 
 
@@ -209,6 +141,7 @@ var _renderSingleAssertion = function(assertion) {
 ////////////
 // for Tape
 ////////////
+// Tape's use of 'plan' requires slightly different template building
 var _renderTapeTests = R.reduce(function(testsString, test) {
   return testsString + _renderSingleTapeTest(test, tapeTemps.base, tapeTemps.plan);
 }, '');
@@ -224,8 +157,13 @@ var _renderSingleTapeTest = function(test, baseTemp, planTemp) {
 };
 
 /////////////////////////////
-// for Jasmine or Mocha-Chai
+// for Jasmine and Mocha-Chai
 /////////////////////////////
+var _renderTests = R.reduce(function(testsString, test) {
+  var baseTemp = _renderTests.fw === 'jasmine' ? jasmineTemps.base : mochaChaiTemps.base;
+  return testsString + _renderSingleTest(test, baseTemp) + eol;
+}, '' + eol);
+
 var _renderSingleTest = function(test, baseTemp) {
   var base = baseTemp({
     testTitle: test.testTitle,
@@ -233,5 +171,3 @@ var _renderSingleTest = function(test, baseTemp) {
   });
   return base + eol + _renderAssertions(test.assertions) + '});';
 };
-
-
