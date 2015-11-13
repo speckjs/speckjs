@@ -5,7 +5,7 @@
   Speckjs formatted comment example:
   ```
   // test > sum function
-  // # sum(1,3) == 4 (returnt.equal(4, file.sum(13) the sum of both params)
+  // # sum(1,3) == 4 (returns the sum of both params)
   // # sum(10,10) == 20 (return the sum of both params)
   ```
   Return an array of raw test objects in the form of:
@@ -15,8 +15,8 @@
       title: 'sum function',
       loc: { startLine: 0, endLine: 10},`
       assertions: [
-        'sum(1,3) == 4 (return the sum of both params)',
-        'sum(10,10) == 20 (return the sum of both params)'
+        'sum(1,3) == 4 (returns the sum of both params)',
+        'sum(10,10) == 20 (returns the sum of both params)'
       ]
     }
   ]
