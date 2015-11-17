@@ -16,27 +16,27 @@ var planTemplate = function(it) {
 
 //Individual Assertion templates
 var equalTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 var notEqualTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 var notDeepEqualTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 var deepEqualTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(' + (it.assertionOutput) + ', file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 var okTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 var notOkTemplate = function(it) {
-  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');' + eol;
+  return 't.' + (it.assertionType) + '(file.' + (it.assertionInput) + ', \'' + (it.assertionMessage) + '\');';
 };
 
 module.exports = {
