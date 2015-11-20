@@ -59,7 +59,7 @@ These are the assertion types currently supported, and you can extend this list 
 
 ### Using the API
 Require the module:
-```
+```js
 var speck = require('speckjs');
 ```
 
@@ -74,7 +74,7 @@ The API is comprised of a single function, `build(file, options)`:
 
 By default, `build` returns a file (String) of all the unit-tests as indicated from the SpeckJS comments in the original file that was loaded. Here are a few examples of how you can use `build`:
 
-```
+```js
 // file object to be passed as an argument
 var file = {
   name: 'demo.js',
@@ -92,7 +92,7 @@ var option2 = {
   onBuild: function(data) {
     console.log(data);
   }
-}
+};
 
 // Returns Tape test file
 var result0 = speck.build(file);
